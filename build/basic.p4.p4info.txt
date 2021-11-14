@@ -34,6 +34,20 @@ actions {
 }
 actions {
   preamble {
+    id: 29828711
+    name: "MyIngress.addSuspect"
+    alias: "addSuspect"
+  }
+}
+actions {
+  preamble {
+    id: 25481818
+    name: "MyIngress.removeSuspect"
+    alias: "removeSuspect"
+  }
+}
+actions {
+  preamble {
     id: 25652968
     name: "MyIngress.drop"
     alias: "drop"
@@ -55,6 +69,36 @@ actions {
     name: "port"
     bitwidth: 9
   }
+}
+registers {
+  preamble {
+    id: 380262112
+    name: "MyIngress.suspect_list"
+    alias: "suspect_list"
+  }
+  type_spec {
+    bitstring {
+      bit {
+        bitwidth: 256
+      }
+    }
+  }
+  size: 1
+}
+registers {
+  preamble {
+    id: 384447484
+    name: "MyIngress.remove_suspect_list"
+    alias: "remove_suspect_list"
+  }
+  type_spec {
+    bitstring {
+      bit {
+        bitwidth: 256
+      }
+    }
+  }
+  size: 1
 }
 type_info {
 }
