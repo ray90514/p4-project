@@ -87,6 +87,126 @@ registers {
 }
 registers {
   preamble {
+    id: 382900530
+    name: "MyIngress.suspect_list_high_0"
+    alias: "suspect_list_high_0"
+  }
+  type_spec {
+    bitstring {
+      bit {
+        bitwidth: 256
+      }
+    }
+  }
+  size: 1
+}
+registers {
+  preamble {
+    id: 370462346
+    name: "MyIngress.suspect_list_low_0"
+    alias: "suspect_list_low_0"
+  }
+  type_spec {
+    bitstring {
+      bit {
+        bitwidth: 256
+      }
+    }
+  }
+  size: 1
+}
+registers {
+  preamble {
+    id: 385157870
+    name: "MyIngress.suspect_list_high_1"
+    alias: "suspect_list_high_1"
+  }
+  type_spec {
+    bitstring {
+      bit {
+        bitwidth: 256
+      }
+    }
+  }
+  size: 1
+}
+registers {
+  preamble {
+    id: 376254780
+    name: "MyIngress.suspect_list_low_1"
+    alias: "suspect_list_low_1"
+  }
+  type_spec {
+    bitstring {
+      bit {
+        bitwidth: 256
+      }
+    }
+  }
+  size: 1
+}
+registers {
+  preamble {
+    id: 369567506
+    name: "MyIngress.suspect_list_high_2"
+    alias: "suspect_list_high_2"
+  }
+  type_spec {
+    bitstring {
+      bit {
+        bitwidth: 256
+      }
+    }
+  }
+  size: 1
+}
+registers {
+  preamble {
+    id: 380671427
+    name: "MyIngress.suspect_list_low_2"
+    alias: "suspect_list_low_2"
+  }
+  type_spec {
+    bitstring {
+      bit {
+        bitwidth: 256
+      }
+    }
+  }
+  size: 1
+}
+registers {
+  preamble {
+    id: 376561126
+    name: "MyIngress.suspect_list_high_3"
+    alias: "suspect_list_high_3"
+  }
+  type_spec {
+    bitstring {
+      bit {
+        bitwidth: 256
+      }
+    }
+  }
+  size: 1
+}
+registers {
+  preamble {
+    id: 369293415
+    name: "MyIngress.suspect_list_low_3"
+    alias: "suspect_list_low_3"
+  }
+  type_spec {
+    bitstring {
+      bit {
+        bitwidth: 256
+      }
+    }
+  }
+  size: 1
+}
+registers {
+  preamble {
     id: 384447484
     name: "MyIngress.remove_suspect_list"
     alias: "remove_suspect_list"

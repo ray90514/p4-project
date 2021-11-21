@@ -6,7 +6,10 @@ const bit<16> TYPE_IPV4 = 0x800;
 const bit<16> TYPE_Alarm = 0x800;
 const int WINDOW_SIZE = 8192;
 const int TABLE_NUM = 8192;
-
+//const bit<LIST_BIT_WIDTH> bit_pos_0 = 0x1;
+//const bit<LIST_BIT_WIDTH> bit_pos_256 = 0x10000000000000000000000000000000000000000000000000000000000000000;
+//const bit<LIST_BIT_WIDTH> bit_pos_512 =0x100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000;
+//const bit<LIST_BIT_WIDTH> bit_pos_768 =0x1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000;
 /*************************************************************************
 *********************** H E A D E R S  ***********************************
 *************************************************************************/
@@ -41,17 +44,23 @@ header alarm_t {
 }
 
 header suspect_list_t {
-    bit<LIST_BIT_WIDTH> list;
+    bit<LIST_BIT_WIDTH> list;//TODO: to be removed
+    bit<LIST_BIT_WIDTH> list0_high;
+    bit<LIST_BIT_WIDTH> list0_low;
+    bit<LIST_BIT_WIDTH> list1_high;
+    bit<LIST_BIT_WIDTH> list1_low;
+    bit<LIST_BIT_WIDTH> list2_high;
+    bit<LIST_BIT_WIDTH> list2_low;
+    bit<LIST_BIT_WIDTH> list3_high;
+    bit<LIST_BIT_WIDTH> list3_low;
 }
 
 header removed_ip_t {
     bit<32> removed_ip;
 }
-
 struct metadata {
     /* empty */
 }
-
 struct headers {
     ethernet_t   ethernet;
     ipv4_t       ipv4;
@@ -120,9 +129,32 @@ control MyVerifyChecksum(inout headers hdr, inout metadata meta) {
 control MyIngress(inout headers hdr,
                   inout metadata meta,
                   inout standard_metadata_t standard_metadata) {
-
+    //TODO: operation of two hash addresses neeeded
     register<bit<LIST_BIT_WIDTH>>(1) suspect_list;
+    register<bit<LIST_BIT_WIDTH>>(1) suspect_list_high_0;
+    register<bit<LIST_BIT_WIDTH>>(1) suspect_list_low_0;
+    register<bit<LIST_BIT_WIDTH>>(1) suspect_list_high_1;
+    register<bit<LIST_BIT_WIDTH>>(1) suspect_list_low_1;
+    register<bit<LIST_BIT_WIDTH>>(1) suspect_list_high_2;
+    register<bit<LIST_BIT_WIDTH>>(1) suspect_list_low_2;
+    register<bit<LIST_BIT_WIDTH>>(1) suspect_list_high_3;
+    register<bit<LIST_BIT_WIDTH>>(1) suspect_list_low_3;
     register<bit<LIST_BIT_WIDTH>>(1) remove_suspect_list;
+    bit<LIST_BIT_WIDTH> list_low_value_0;
+    bit<LIST_BIT_WIDTH> list_high_value_0;
+    bit<LIST_BIT_WIDTH> list_low_value_1;
+    bit<LIST_BIT_WIDTH> list_high_value_1;
+    bit<LIST_BIT_WIDTH> list_low_value_2;
+    bit<LIST_BIT_WIDTH> list_high_value_2;
+    bit<LIST_BIT_WIDTH> list_low_value_3;
+    bit<LIST_BIT_WIDTH> list_high_value_3;
+    bit<LIST_BIT_WIDTH> entry_count;
+    bit<LIST_BIT_WIDTH> mask1;
+    bit<LIST_BIT_WIDTH> mask2;
+    bit<LIST_BIT_WIDTH> bit_mask;
+    bit<10> addr;
+    bit<8> addr8;
+    bool isSuspect;//isSuspect 1
     action addSuspect() {
         bit<LIST_BIT_WIDTH> res_suspect_list;
         suspect_list.read(res_suspect_list, 0);
@@ -162,11 +194,156 @@ control MyIngress(inout headers hdr,
         size = 1024;
         default_action = NoAction();
     }
-
+    //remove suspect list
+    action remove_list_0() {
+        addr8 = (bit<8>)addr;
+        bit_mask = (bit<LIST_BIT_WIDTH>)1 << (bit<8>)addr;
+        entry_count = ((list_high_value_0 & bit_mask) >> (addr8 + 1)) + ((list_low_value_0 & bit_mask) >> addr8) - 1;
+        list_high_value_0 = (list_high_value_0 & ~bit_mask) | (entry_count & 0b10) << (addr8 - 1);
+        list_low_value_0 = (list_low_value_0 & ~bit_mask) | (entry_count & 0b01) << addr8;
+    }
+    action remove_list_1() {
+        addr8 = (bit<8>)(addr - 256);
+        bit_mask = (bit<LIST_BIT_WIDTH>)1 << addr8;
+        entry_count = ((list_high_value_1 & bit_mask) >> (addr8 + 1)) + ((list_low_value_1 & bit_mask) >> addr8) - 1;
+        list_high_value_1 = (list_high_value_1 & ~bit_mask) | (entry_count & 0b10) << (addr8 - 1);
+        list_low_value_1 = (list_low_value_1 & ~bit_mask) | (entry_count & 0b01) << addr8;
+    }
+    action remove_list_2() {
+        addr8 = (bit<8>)(addr - 512);
+        bit_mask = (bit<LIST_BIT_WIDTH>)1 << 8;
+        entry_count = ((list_high_value_2 & bit_mask) >> (addr8 + 1)) + ((list_low_value_2 & bit_mask) >> addr8) - 1;
+        list_high_value_2 = (list_high_value_2 & ~bit_mask) | (entry_count & 0b10) << (addr8 - 1);
+        list_low_value_2 = (list_low_value_2 & ~bit_mask) | (entry_count & 0b01) << addr8;
+    }
+    action remove_list_3() {
+        addr8 = (bit<8>)(addr - 768);
+        bit_mask = (bit<LIST_BIT_WIDTH>)1 << addr8;
+        entry_count = ((list_high_value_3 & bit_mask) >> (addr8 + 1)) + ((list_low_value_3 & bit_mask) >> addr8) - 1;
+        list_high_value_3 = (list_high_value_3 & ~bit_mask) | (entry_count & 0b10) << (addr8 - 1);
+        list_low_value_3 = (list_low_value_3 & ~bit_mask) | (entry_count & 0b01) << addr8;
+    }
+    table remove_suspect {
+        key = {
+            addr : range;
+        }
+        actions = {
+            remove_list_0;
+            remove_list_1;
+            remove_list_2;
+            remove_list_3;
+            NoAction;
+        }
+        default_action = NoAction();
+        const entries = {
+            (0 .. 255) : remove_list_0();
+            (256 .. 511) : remove_list_1();
+            (512 .. 767) : remove_list_2();
+            (768 .. 1023) : remove_list_3();
+        }
+    }
+    //add suspect list
+    action add_list_0() {
+        addr8 = (bit<8>)addr;
+        bit_mask = (bit<LIST_BIT_WIDTH>)1 << (bit<8>)addr;
+        entry_count = ((list_high_value_0 & bit_mask) >> (addr8 + 1)) + ((list_low_value_0 & bit_mask) >> addr8) + 1;
+        list_high_value_0 = (list_high_value_0 & ~bit_mask) | (entry_count & 0b10) << (addr8 - 1);
+        list_low_value_0 = (list_low_value_0 & ~bit_mask) | (entry_count & 0b01) << addr8;
+    }
+    action add_list_1() {
+        addr8 = (bit<8>)(addr - 256);
+        bit_mask = (bit<LIST_BIT_WIDTH>)1 << addr8;
+        entry_count = ((list_high_value_1 & bit_mask) >> (addr8 + 1)) + ((list_low_value_1 & bit_mask) >> addr8) + 1;
+        list_high_value_1 = (list_high_value_1 & ~bit_mask) | (entry_count & 0b10) << (addr8 - 1);
+        list_low_value_1 = (list_low_value_1 & ~bit_mask) | (entry_count & 0b01) << addr8;
+    }
+    action add_list_2() {
+        addr8 = (bit<8>)(addr - 512);
+        bit_mask = (bit<LIST_BIT_WIDTH>)1 << 8;
+        entry_count = ((list_high_value_2 & bit_mask) >> (addr8 + 1)) + ((list_low_value_2 & bit_mask) >> addr8) + 1;
+        list_high_value_2 = (list_high_value_2 & ~bit_mask) | (entry_count & 0b10) << (addr8 - 1);
+        list_low_value_2 = (list_low_value_2 & ~bit_mask) | (entry_count & 0b01) << addr8;
+    }
+    action add_list_3() {
+        addr8 = (bit<8>)(addr - 768);
+        bit_mask = (bit<LIST_BIT_WIDTH>)1 << addr8;
+        entry_count = ((list_high_value_3 & bit_mask) >> (addr8 + 1)) + ((list_low_value_3 & bit_mask) >> addr8) + 1;
+        list_high_value_3 = (list_high_value_3 & ~bit_mask) | (entry_count & 0b10) << (addr8 - 1);
+        list_low_value_3 = (list_low_value_3 & ~bit_mask) | (entry_count & 0b01) << addr8;
+    }
+    table add_suspect {
+        key = {
+            addr : range;
+        }
+        actions = {
+            add_list_0;
+            add_list_1;
+            add_list_2;
+            add_list_3;
+            NoAction;
+        }
+        default_action = NoAction();
+        const entries = {
+            (0 .. 255) : add_list_0();
+            (256 .. 511) : add_list_1();
+            (512 .. 767) : add_list_2();
+            (768 .. 1023) : add_list_3();
+        }
+    }
+    //check suspect list
+    action check_list_0() {
+        addr8 = (bit<8>)addr;
+        bit_mask = (bit<LIST_BIT_WIDTH>)1 << (bit<8>)addr;
+        entry_count = ((list_high_value_0 & bit_mask) >> (addr8 + 1)) + ((list_low_value_0 & bit_mask) >> addr8) + 1;
+    }
+    action check_list_1() {
+        addr8 = (bit<8>)(addr - 256);
+        bit_mask = (bit<LIST_BIT_WIDTH>)1 << addr8;
+        entry_count = ((list_high_value_1 & bit_mask) >> (addr8 + 1)) + ((list_low_value_1 & bit_mask) >> addr8) + 1;
+    }
+    action check_list_2() {
+        addr8 = (bit<8>)(addr - 512);
+        bit_mask = (bit<LIST_BIT_WIDTH>)1 << 8;
+        entry_count = ((list_high_value_2 & bit_mask) >> (addr8 + 1)) + ((list_low_value_2 & bit_mask) >> addr8) + 1;
+    }
+    action check_list_3() {
+        addr8 = (bit<8>)(addr - 768);
+        bit_mask = (bit<LIST_BIT_WIDTH>)1 << addr8;
+        entry_count = ((list_high_value_3 & bit_mask) >> (addr8 + 1)) + ((list_low_value_3 & bit_mask) >> addr8) + 1;
+    }
+    table check_suspect {
+        key = {
+            addr : range;
+        }
+        actions = {
+            check_list_0;
+            check_list_1;
+            check_list_2;
+            check_list_3;
+            NoAction;
+        }
+        default_action = NoAction();
+        const entries = {
+            (0 .. 255) : check_list_0();
+            (256 .. 511) : check_list_1();
+            (512 .. 767) : check_list_2();
+            (768 .. 1023) : check_list_3();
+        }
+    }
     apply {
         /* TODO: fix ingress control logic
          *  - ipv4_lpm should be applied only when IPv4 header is valid
          */
+        //get values of whole suspect lists values
+        suspect_list_high_0.read(list_high_value_0, 0);
+        suspect_list_low_0.read(list_low_value_0, 0);
+        suspect_list_high_1.read(list_high_value_1, 0);
+        suspect_list_low_1.read(list_low_value_1, 0);
+        suspect_list_high_2.read(list_high_value_2, 0);
+        suspect_list_low_2.read(list_low_value_2, 0);
+        suspect_list_high_3.read(list_high_value_3, 0);
+        suspect_list_low_3.read(list_low_value_3, 0);
+
         if(hdr.ipv4.isValid()) {
             ipv4_lpm.apply();
         }
@@ -186,7 +363,6 @@ control MyIngress(inout headers hdr,
             addSuspect();
         }
         //check suspect
-        bool isSuspect;
         bit<8> pos1;
         bit<LIST_BIT_WIDTH> res_suspect; bit<LIST_BIT_WIDTH> res_remove_suspect;
         hash(pos1, HashAlgorithm.crc16, (bit<8>)0, {hdr.ipv4.srcAddr}, (bit<9>)LIST_BIT_WIDTH);
@@ -204,9 +380,19 @@ control MyIngress(inout headers hdr,
         else {
             isSuspect = false;
         }
+        //TODO:suspect checked
         if(isSuspect) {
 
         }
+        //apply the whole suspect list
+        suspect_list_high_0.write(0, list_high_value_0);
+        suspect_list_low_0.write(0, list_low_value_0);
+        suspect_list_high_1.write(0, list_high_value_1);
+        suspect_list_low_1.write(0, list_low_value_1);
+        suspect_list_high_2.write(0, list_high_value_2);
+        suspect_list_low_2.write(0, list_low_value_2);
+        suspect_list_high_3.write(0, list_high_value_3);
+        suspect_list_low_3.write(0, list_low_value_3);
     }
 }
 

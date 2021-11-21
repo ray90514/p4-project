@@ -7,6 +7,14 @@
         ["tmp", 32, false],
         ["tmp_0", 256, false],
         ["tmp_1", 32, false],
+        ["list_low_value", 256, false],
+        ["list_high_value", 256, false],
+        ["list_low_value_4", 256, false],
+        ["list_high_value_4", 256, false],
+        ["list_low_value_5", 256, false],
+        ["list_high_value_5", 256, false],
+        ["list_low_value_6", 256, false],
+        ["list_high_value_6", 256, false],
         ["res_suspect_list_0", 256, false],
         ["pos1_0", 8, false],
         ["res_remove_suspect_0", 256, false],
@@ -78,7 +86,15 @@
       "name" : "suspect_list_t",
       "id" : 5,
       "fields" : [
-        ["list", 256, false]
+        ["list", 256, false],
+        ["list0_high", 256, false],
+        ["list0_low", 256, false],
+        ["list1_high", 256, false],
+        ["list1_low", 256, false],
+        ["list2_high", 256, false],
+        ["list2_low", 256, false],
+        ["list3_high", 256, false],
+        ["list3_low", 256, false]
       ]
     },
     {
@@ -319,7 +335,7 @@
       "id" : 0,
       "source_info" : {
         "filename" : "basic.p4",
-        "line" : 252,
+        "line" : 439,
         "column" : 8,
         "source_fragment" : "MyDeparser"
       },
@@ -335,7 +351,7 @@
       "id" : 0,
       "source_info" : {
         "filename" : "basic.p4",
-        "line" : 124,
+        "line" : 133,
         "column" : 26,
         "source_fragment" : "suspect_list"
       },
@@ -343,11 +359,107 @@
       "bitwidth" : 256
     },
     {
-      "name" : "MyIngress.remove_suspect_list",
+      "name" : "MyIngress.suspect_list_high_0",
       "id" : 1,
       "source_info" : {
         "filename" : "basic.p4",
-        "line" : 125,
+        "line" : 134,
+        "column" : 26,
+        "source_fragment" : "suspect_list_high_0"
+      },
+      "size" : 1,
+      "bitwidth" : 256
+    },
+    {
+      "name" : "MyIngress.suspect_list_low_0",
+      "id" : 2,
+      "source_info" : {
+        "filename" : "basic.p4",
+        "line" : 135,
+        "column" : 26,
+        "source_fragment" : "suspect_list_low_0"
+      },
+      "size" : 1,
+      "bitwidth" : 256
+    },
+    {
+      "name" : "MyIngress.suspect_list_high_1",
+      "id" : 3,
+      "source_info" : {
+        "filename" : "basic.p4",
+        "line" : 136,
+        "column" : 26,
+        "source_fragment" : "suspect_list_high_1"
+      },
+      "size" : 1,
+      "bitwidth" : 256
+    },
+    {
+      "name" : "MyIngress.suspect_list_low_1",
+      "id" : 4,
+      "source_info" : {
+        "filename" : "basic.p4",
+        "line" : 137,
+        "column" : 26,
+        "source_fragment" : "suspect_list_low_1"
+      },
+      "size" : 1,
+      "bitwidth" : 256
+    },
+    {
+      "name" : "MyIngress.suspect_list_high_2",
+      "id" : 5,
+      "source_info" : {
+        "filename" : "basic.p4",
+        "line" : 138,
+        "column" : 26,
+        "source_fragment" : "suspect_list_high_2"
+      },
+      "size" : 1,
+      "bitwidth" : 256
+    },
+    {
+      "name" : "MyIngress.suspect_list_low_2",
+      "id" : 6,
+      "source_info" : {
+        "filename" : "basic.p4",
+        "line" : 139,
+        "column" : 26,
+        "source_fragment" : "suspect_list_low_2"
+      },
+      "size" : 1,
+      "bitwidth" : 256
+    },
+    {
+      "name" : "MyIngress.suspect_list_high_3",
+      "id" : 7,
+      "source_info" : {
+        "filename" : "basic.p4",
+        "line" : 140,
+        "column" : 26,
+        "source_fragment" : "suspect_list_high_3"
+      },
+      "size" : 1,
+      "bitwidth" : 256
+    },
+    {
+      "name" : "MyIngress.suspect_list_low_3",
+      "id" : 8,
+      "source_info" : {
+        "filename" : "basic.p4",
+        "line" : 141,
+        "column" : 26,
+        "source_fragment" : "suspect_list_low_3"
+      },
+      "size" : 1,
+      "bitwidth" : 256
+    },
+    {
+      "name" : "MyIngress.remove_suspect_list",
+      "id" : 9,
+      "source_info" : {
+        "filename" : "basic.p4",
+        "line" : 142,
         "column" : 26,
         "source_fragment" : "remove_suspect_list"
       },
@@ -383,7 +495,7 @@
       "id" : 2,
       "source_info" : {
         "filename" : "basic.p4",
-        "line" : 229,
+        "line" : 416,
         "column" : 1,
         "source_fragment" : "update_checksum( ..."
       },
@@ -467,7 +579,7 @@
           ],
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 128,
+            "line" : 160,
             "column" : 8,
             "source_fragment" : "suspect_list.read(res_suspect_list, 0)"
           }
@@ -499,7 +611,7 @@
           ],
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 129,
+            "line" : 161,
             "column" : 8,
             "source_fragment" : "res_suspect_list = res_suspect_list | hdr.suspect_list_h.list"
           }
@@ -522,7 +634,7 @@
           ],
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 130,
+            "line" : 162,
             "column" : 8,
             "source_fragment" : "suspect_list.write(0, res_suspect_list)"
           }
@@ -548,7 +660,7 @@
           ],
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 175,
+            "line" : 353,
             "column" : 26,
             "source_fragment" : "hdr.removed_ip_h.removed_ip"
           }
@@ -575,7 +687,7 @@
           ],
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 135,
+            "line" : 167,
             "column" : 8,
             "source_fragment" : "hash(pos1, HashAlgorithm.crc16, (bit<8>)0, {ip_addr}, (bit<9>)256)"
           }
@@ -598,7 +710,7 @@
           ],
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 136,
+            "line" : 168,
             "column" : 8,
             "source_fragment" : "remove_suspect_list.read(res_remove_suspect, 0)"
           }
@@ -650,7 +762,7 @@
           ],
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 137,
+            "line" : 169,
             "column" : 37,
             "source_fragment" : "res_remove_suspect | (bit<256>)1 << pos1"
           }
@@ -673,7 +785,7 @@
           ],
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 137,
+            "line" : 169,
             "column" : 8,
             "source_fragment" : "remove_suspect_list.write(0, res_remove_suspect | (bit<256>)1 << pos1)"
           }
@@ -695,7 +807,7 @@
           ],
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 143,
+            "line" : 175,
             "column" : 8,
             "source_fragment" : "mark_to_drop(standard_metadata)"
           }
@@ -730,7 +842,7 @@
           ],
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 148,
+            "line" : 180,
             "column" : 8,
             "source_fragment" : "standard_metadata.egress_spec = port"
           }
@@ -749,7 +861,7 @@
           ],
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 149,
+            "line" : 181,
             "column" : 8,
             "source_fragment" : "hdr.ethernet.srcAddr = hdr.ethernet.dstAddr"
           }
@@ -768,7 +880,7 @@
           ],
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 150,
+            "line" : 182,
             "column" : 8,
             "source_fragment" : "hdr.ethernet.dstAddr = dstAddr"
           }
@@ -776,8 +888,199 @@
       ]
     },
     {
-      "name" : "basic180",
+      "name" : "basic338",
       "id" : 5,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "register_read",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "list_high_value"]
+            },
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.suspect_list_high_0"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00000000"
+            }
+          ],
+          "source_info" : {
+            "filename" : "basic.p4",
+            "line" : 338,
+            "column" : 8,
+            "source_fragment" : "suspect_list_high_0.read(list_high_value_0, 0)"
+          }
+        },
+        {
+          "op" : "register_read",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "list_low_value"]
+            },
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.suspect_list_low_0"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00000000"
+            }
+          ],
+          "source_info" : {
+            "filename" : "basic.p4",
+            "line" : 339,
+            "column" : 8,
+            "source_fragment" : "suspect_list_low_0.read(list_low_value_0, 0)"
+          }
+        },
+        {
+          "op" : "register_read",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "list_high_value_4"]
+            },
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.suspect_list_high_1"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00000000"
+            }
+          ],
+          "source_info" : {
+            "filename" : "basic.p4",
+            "line" : 340,
+            "column" : 8,
+            "source_fragment" : "suspect_list_high_1.read(list_high_value_1, 0)"
+          }
+        },
+        {
+          "op" : "register_read",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "list_low_value_4"]
+            },
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.suspect_list_low_1"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00000000"
+            }
+          ],
+          "source_info" : {
+            "filename" : "basic.p4",
+            "line" : 341,
+            "column" : 8,
+            "source_fragment" : "suspect_list_low_1.read(list_low_value_1, 0)"
+          }
+        },
+        {
+          "op" : "register_read",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "list_high_value_5"]
+            },
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.suspect_list_high_2"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00000000"
+            }
+          ],
+          "source_info" : {
+            "filename" : "basic.p4",
+            "line" : 342,
+            "column" : 8,
+            "source_fragment" : "suspect_list_high_2.read(list_high_value_2, 0)"
+          }
+        },
+        {
+          "op" : "register_read",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "list_low_value_5"]
+            },
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.suspect_list_low_2"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00000000"
+            }
+          ],
+          "source_info" : {
+            "filename" : "basic.p4",
+            "line" : 343,
+            "column" : 8,
+            "source_fragment" : "suspect_list_low_2.read(list_low_value_2, 0)"
+          }
+        },
+        {
+          "op" : "register_read",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "list_high_value_6"]
+            },
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.suspect_list_high_3"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00000000"
+            }
+          ],
+          "source_info" : {
+            "filename" : "basic.p4",
+            "line" : 344,
+            "column" : 8,
+            "source_fragment" : "suspect_list_high_3.read(list_high_value_3, 0)"
+          }
+        },
+        {
+          "op" : "register_read",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "list_low_value_6"]
+            },
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.suspect_list_low_3"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00000000"
+            }
+          ],
+          "source_info" : {
+            "filename" : "basic.p4",
+            "line" : 345,
+            "column" : 8,
+            "source_fragment" : "suspect_list_low_3.read(list_low_value_3, 0)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "basic358",
+      "id" : 6,
       "runtime_data" : [],
       "primitives" : [
         {
@@ -798,7 +1101,7 @@
           ],
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 180,
+            "line" : 358,
             "column" : 16,
             "source_fragment" : "suspect_list.write(0, (bit<256>)0)"
           }
@@ -821,7 +1124,7 @@
           ],
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 181,
+            "line" : 359,
             "column" : 16,
             "source_fragment" : "remove_suspect_list.write(0, (bit<256>)0)"
           }
@@ -829,8 +1132,8 @@
       ]
     },
     {
-      "name" : "basic177",
-      "id" : 6,
+      "name" : "basic355",
+      "id" : 7,
       "runtime_data" : [],
       "primitives" : [
         {
@@ -851,7 +1154,7 @@
           ],
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 177,
+            "line" : 355,
             "column" : 12,
             "source_fragment" : "suspect_list.read(res_suspect, 0)"
           }
@@ -874,7 +1177,7 @@
           ],
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 178,
+            "line" : 356,
             "column" : 12,
             "source_fragment" : "remove_suspect_list.read(res_remove_suspect, 0)"
           }
@@ -882,8 +1185,8 @@
       ]
     },
     {
-      "name" : "basic196",
-      "id" : 7,
+      "name" : "basic373",
+      "id" : 8,
       "runtime_data" : [],
       "primitives" : [
         {
@@ -904,7 +1207,7 @@
           ],
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 196,
+            "line" : 373,
             "column" : 12,
             "source_fragment" : "suspect_list.read(res_suspect, 0)"
           }
@@ -912,8 +1215,8 @@
       ]
     },
     {
-      "name" : "basic192",
-      "id" : 8,
+      "name" : "basic369",
+      "id" : 9,
       "runtime_data" : [],
       "primitives" : [
         {
@@ -930,7 +1233,7 @@
           ],
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 192,
+            "line" : 369,
             "column" : 52,
             "source_fragment" : "hdr.ipv4.srcAddr"
           }
@@ -957,7 +1260,7 @@
           ],
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 192,
+            "line" : 369,
             "column" : 8,
             "source_fragment" : "hash(pos1, HashAlgorithm.crc16, (bit<8>)0, {hdr.ipv4.srcAddr}, (bit<9>)256)"
           }
@@ -980,9 +1283,200 @@
           ],
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 193,
+            "line" : 370,
             "column" : 8,
             "source_fragment" : "remove_suspect_list.read(res_remove_suspect, 0)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "basic389",
+      "id" : 10,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "register_write",
+          "parameters" : [
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.suspect_list_high_0"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00000000"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "list_high_value"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "basic.p4",
+            "line" : 389,
+            "column" : 8,
+            "source_fragment" : "suspect_list_high_0.write(0, list_high_value_0)"
+          }
+        },
+        {
+          "op" : "register_write",
+          "parameters" : [
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.suspect_list_low_0"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00000000"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "list_low_value"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "basic.p4",
+            "line" : 390,
+            "column" : 8,
+            "source_fragment" : "suspect_list_low_0.write(0, list_low_value_0)"
+          }
+        },
+        {
+          "op" : "register_write",
+          "parameters" : [
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.suspect_list_high_1"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00000000"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "list_high_value_4"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "basic.p4",
+            "line" : 391,
+            "column" : 8,
+            "source_fragment" : "suspect_list_high_1.write(0, list_high_value_1)"
+          }
+        },
+        {
+          "op" : "register_write",
+          "parameters" : [
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.suspect_list_low_1"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00000000"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "list_low_value_4"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "basic.p4",
+            "line" : 392,
+            "column" : 8,
+            "source_fragment" : "suspect_list_low_1.write(0, list_low_value_1)"
+          }
+        },
+        {
+          "op" : "register_write",
+          "parameters" : [
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.suspect_list_high_2"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00000000"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "list_high_value_5"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "basic.p4",
+            "line" : 393,
+            "column" : 8,
+            "source_fragment" : "suspect_list_high_2.write(0, list_high_value_2)"
+          }
+        },
+        {
+          "op" : "register_write",
+          "parameters" : [
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.suspect_list_low_2"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00000000"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "list_low_value_5"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "basic.p4",
+            "line" : 394,
+            "column" : 8,
+            "source_fragment" : "suspect_list_low_2.write(0, list_low_value_2)"
+          }
+        },
+        {
+          "op" : "register_write",
+          "parameters" : [
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.suspect_list_high_3"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00000000"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "list_high_value_6"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "basic.p4",
+            "line" : 395,
+            "column" : 8,
+            "source_fragment" : "suspect_list_high_3.write(0, list_high_value_3)"
+          }
+        },
+        {
+          "op" : "register_write",
+          "parameters" : [
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.suspect_list_low_3"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00000000"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "list_low_value_6"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "basic.p4",
+            "line" : 396,
+            "column" : 8,
+            "source_fragment" : "suspect_list_low_3.write(0, list_low_value_3)"
           }
         }
       ]
@@ -994,18 +1488,47 @@
       "id" : 0,
       "source_info" : {
         "filename" : "basic.p4",
-        "line" : 120,
+        "line" : 129,
         "column" : 8,
         "source_fragment" : "MyIngress"
       },
-      "init_table" : "node_2",
+      "init_table" : "tbl_basic338",
       "tables" : [
         {
-          "name" : "MyIngress.ipv4_lpm",
+          "name" : "tbl_basic338",
           "id" : 0,
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 153,
+            "line" : 338,
+            "column" : 8,
+            "source_fragment" : "suspect_list_high_0.read(list_high_value_0, 0); ..."
+          },
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [5],
+          "actions" : ["basic338"],
+          "base_default_next" : "node_3",
+          "next_tables" : {
+            "basic338" : "node_3"
+          },
+          "default_entry" : {
+            "action_id" : 5,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        },
+        {
+          "name" : "MyIngress.ipv4_lpm",
+          "id" : 1,
+          "source_info" : {
+            "filename" : "basic.p4",
+            "line" : 185,
             "column" : 10,
             "source_fragment" : "ipv4_lpm"
           },
@@ -1025,11 +1548,11 @@
           "direct_meters" : null,
           "action_ids" : [4, 3, 0],
           "actions" : ["MyIngress.ipv4_forward", "MyIngress.drop", "NoAction"],
-          "base_default_next" : "node_4",
+          "base_default_next" : "node_5",
           "next_tables" : {
-            "MyIngress.ipv4_forward" : "node_4",
-            "MyIngress.drop" : "node_4",
-            "NoAction" : "node_4"
+            "MyIngress.ipv4_forward" : "node_5",
+            "MyIngress.drop" : "node_5",
+            "NoAction" : "node_5"
           },
           "default_entry" : {
             "action_id" : 0,
@@ -1040,10 +1563,10 @@
         },
         {
           "name" : "tbl_removeSuspect",
-          "id" : 1,
+          "id" : 2,
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 175,
+            "line" : 353,
             "column" : 12,
             "source_fragment" : "removeSuspect(hdr.removed_ip_h.removed_ip)"
           },
@@ -1056,9 +1579,9 @@
           "direct_meters" : null,
           "action_ids" : [2],
           "actions" : ["MyIngress.removeSuspect"],
-          "base_default_next" : "tbl_basic177",
+          "base_default_next" : "tbl_basic355",
           "next_tables" : {
-            "MyIngress.removeSuspect" : "tbl_basic177"
+            "MyIngress.removeSuspect" : "tbl_basic355"
           },
           "default_entry" : {
             "action_id" : 2,
@@ -1068,11 +1591,11 @@
           }
         },
         {
-          "name" : "tbl_basic177",
-          "id" : 2,
+          "name" : "tbl_basic355",
+          "id" : 3,
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 177,
+            "line" : 355,
             "column" : 12,
             "source_fragment" : "suspect_list.read(res_suspect, 0); ..."
           },
@@ -1083,25 +1606,25 @@
           "with_counters" : false,
           "support_timeout" : false,
           "direct_meters" : null,
-          "action_ids" : [6],
-          "actions" : ["basic177"],
-          "base_default_next" : "node_7",
+          "action_ids" : [7],
+          "actions" : ["basic355"],
+          "base_default_next" : "node_8",
           "next_tables" : {
-            "basic177" : "node_7"
+            "basic355" : "node_8"
           },
           "default_entry" : {
-            "action_id" : 6,
+            "action_id" : 7,
             "action_const" : true,
             "action_data" : [],
             "action_entry_const" : true
           }
         },
         {
-          "name" : "tbl_basic180",
-          "id" : 3,
+          "name" : "tbl_basic358",
+          "id" : 4,
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 180,
+            "line" : 358,
             "column" : 16,
             "source_fragment" : "suspect_list.write(0, (bit<256>)0); ..."
           },
@@ -1112,14 +1635,14 @@
           "with_counters" : false,
           "support_timeout" : false,
           "direct_meters" : null,
-          "action_ids" : [5],
-          "actions" : ["basic180"],
-          "base_default_next" : "node_9",
+          "action_ids" : [6],
+          "actions" : ["basic358"],
+          "base_default_next" : "node_10",
           "next_tables" : {
-            "basic180" : "node_9"
+            "basic358" : "node_10"
           },
           "default_entry" : {
-            "action_id" : 5,
+            "action_id" : 6,
             "action_const" : true,
             "action_data" : [],
             "action_entry_const" : true
@@ -1127,10 +1650,10 @@
         },
         {
           "name" : "tbl_addSuspect",
-          "id" : 4,
+          "id" : 5,
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 186,
+            "line" : 364,
             "column" : 12,
             "source_fragment" : "addSuspect()"
           },
@@ -1143,9 +1666,9 @@
           "direct_meters" : null,
           "action_ids" : [1],
           "actions" : ["MyIngress.addSuspect"],
-          "base_default_next" : "tbl_basic192",
+          "base_default_next" : "tbl_basic369",
           "next_tables" : {
-            "MyIngress.addSuspect" : "tbl_basic192"
+            "MyIngress.addSuspect" : "tbl_basic369"
           },
           "default_entry" : {
             "action_id" : 1,
@@ -1155,11 +1678,11 @@
           }
         },
         {
-          "name" : "tbl_basic192",
-          "id" : 5,
+          "name" : "tbl_basic369",
+          "id" : 6,
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 192,
+            "line" : 369,
             "column" : 8,
             "source_fragment" : "hash(pos1, HashAlgorithm.crc16, (bit<8>)0, {hdr.ipv4.srcAddr}, (bit<9>)256); ..."
           },
@@ -1170,25 +1693,25 @@
           "with_counters" : false,
           "support_timeout" : false,
           "direct_meters" : null,
-          "action_ids" : [8],
-          "actions" : ["basic192"],
-          "base_default_next" : "node_12",
+          "action_ids" : [9],
+          "actions" : ["basic369"],
+          "base_default_next" : "node_13",
           "next_tables" : {
-            "basic192" : "node_12"
+            "basic369" : "node_13"
           },
           "default_entry" : {
-            "action_id" : 8,
+            "action_id" : 9,
             "action_const" : true,
             "action_data" : [],
             "action_entry_const" : true
           }
         },
         {
-          "name" : "tbl_basic196",
-          "id" : 6,
+          "name" : "tbl_basic373",
+          "id" : 7,
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 196,
+            "line" : 373,
             "column" : 12,
             "source_fragment" : "suspect_list.read(res_suspect, 0)"
           },
@@ -1199,14 +1722,43 @@
           "with_counters" : false,
           "support_timeout" : false,
           "direct_meters" : null,
-          "action_ids" : [7],
-          "actions" : ["basic196"],
-          "base_default_next" : null,
+          "action_ids" : [8],
+          "actions" : ["basic373"],
+          "base_default_next" : "tbl_basic389",
           "next_tables" : {
-            "basic196" : null
+            "basic373" : "tbl_basic389"
           },
           "default_entry" : {
-            "action_id" : 7,
+            "action_id" : 8,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        },
+        {
+          "name" : "tbl_basic389",
+          "id" : 8,
+          "source_info" : {
+            "filename" : "basic.p4",
+            "line" : 389,
+            "column" : 8,
+            "source_fragment" : "suspect_list_high_0.write(0, list_high_value_0); ..."
+          },
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [10],
+          "actions" : ["basic389"],
+          "base_default_next" : null,
+          "next_tables" : {
+            "basic389" : null
+          },
+          "default_entry" : {
+            "action_id" : 10,
             "action_const" : true,
             "action_data" : [],
             "action_entry_const" : true
@@ -1216,11 +1768,11 @@
       "action_profiles" : [],
       "conditionals" : [
         {
-          "name" : "node_2",
+          "name" : "node_3",
           "id" : 0,
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 170,
+            "line" : 347,
             "column" : 11,
             "source_fragment" : "hdr.ipv4.isValid()"
           },
@@ -1236,14 +1788,14 @@
             }
           },
           "true_next" : "MyIngress.ipv4_lpm",
-          "false_next" : "node_4"
+          "false_next" : "node_5"
         },
         {
-          "name" : "node_4",
+          "name" : "node_5",
           "id" : 1,
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 174,
+            "line" : 352,
             "column" : 11,
             "source_fragment" : "hdr.removed_ip_h.isValid()"
           },
@@ -1259,14 +1811,14 @@
             }
           },
           "true_next" : "tbl_removeSuspect",
-          "false_next" : "node_9"
+          "false_next" : "node_10"
         },
         {
-          "name" : "node_7",
+          "name" : "node_8",
           "id" : 2,
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 179,
+            "line" : 357,
             "column" : 15,
             "source_fragment" : "res_suspect == res_remove_suspect"
           },
@@ -1284,15 +1836,15 @@
               }
             }
           },
-          "true_next" : "tbl_basic180",
-          "false_next" : "node_9"
+          "true_next" : "tbl_basic358",
+          "false_next" : "node_10"
         },
         {
-          "name" : "node_9",
+          "name" : "node_10",
           "id" : 3,
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 185,
+            "line" : 363,
             "column" : 11,
             "source_fragment" : "hdr.suspect_list_h.isValid()"
           },
@@ -1308,14 +1860,14 @@
             }
           },
           "true_next" : "tbl_addSuspect",
-          "false_next" : "tbl_basic192"
+          "false_next" : "tbl_basic369"
         },
         {
-          "name" : "node_12",
+          "name" : "node_13",
           "id" : 4,
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 195,
+            "line" : 372,
             "column" : 11,
             "source_fragment" : "(res_remove_suspect & (bit<256>)1 << pos1) == 0"
           },
@@ -1363,8 +1915,8 @@
               }
             }
           },
-          "false_next" : null,
-          "true_next" : "tbl_basic196"
+          "true_next" : "tbl_basic373",
+          "false_next" : "tbl_basic389"
         }
       ]
     },
@@ -1373,7 +1925,7 @@
       "id" : 1,
       "source_info" : {
         "filename" : "basic.p4",
-        "line" : 217,
+        "line" : 404,
         "column" : 8,
         "source_fragment" : "MyEgress"
       },
@@ -1389,7 +1941,7 @@
       "id" : 0,
       "source_info" : {
         "filename" : "basic.p4",
-        "line" : 229,
+        "line" : 416,
         "column" : 1,
         "source_fragment" : "update_checksum( ..."
       },
