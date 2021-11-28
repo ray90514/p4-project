@@ -24,26 +24,72 @@ tables {
   }
   size: 1024
 }
+tables {
+  preamble {
+    id: 43799925
+    name: "MyIngress.add_suspect"
+    alias: "add_suspect"
+  }
+  match_fields {
+    id: 1
+    name: "addr"
+    bitwidth: 10
+    match_type: RANGE
+  }
+  action_refs {
+    id: 19891532
+  }
+  action_refs {
+    id: 25551353
+  }
+  action_refs {
+    id: 26430483
+  }
+  action_refs {
+    id: 31762614
+  }
+  action_refs {
+    id: 21257015
+  }
+  size: 1024
+  is_const_table: true
+}
+tables {
+  preamble {
+    id: 36503186
+    name: "MyIngress.check_suspect"
+    alias: "check_suspect"
+  }
+  match_fields {
+    id: 1
+    name: "addr"
+    bitwidth: 10
+    match_type: RANGE
+  }
+  action_refs {
+    id: 31198261
+  }
+  action_refs {
+    id: 27111352
+  }
+  action_refs {
+    id: 24692078
+  }
+  action_refs {
+    id: 20144355
+  }
+  action_refs {
+    id: 21257015
+  }
+  size: 1024
+  is_const_table: true
+}
 actions {
   preamble {
     id: 21257015
     name: "NoAction"
     alias: "NoAction"
     annotations: "@noWarn(\"unused\")"
-  }
-}
-actions {
-  preamble {
-    id: 29828711
-    name: "MyIngress.addSuspect"
-    alias: "addSuspect"
-  }
-}
-actions {
-  preamble {
-    id: 25481818
-    name: "MyIngress.removeSuspect"
-    alias: "removeSuspect"
   }
 }
 actions {
@@ -70,16 +116,72 @@ actions {
     bitwidth: 9
   }
 }
+actions {
+  preamble {
+    id: 19891532
+    name: "MyIngress.add_list_0"
+    alias: "add_list_0"
+  }
+}
+actions {
+  preamble {
+    id: 25551353
+    name: "MyIngress.add_list_1"
+    alias: "add_list_1"
+  }
+}
+actions {
+  preamble {
+    id: 26430483
+    name: "MyIngress.add_list_2"
+    alias: "add_list_2"
+  }
+}
+actions {
+  preamble {
+    id: 31762614
+    name: "MyIngress.add_list_3"
+    alias: "add_list_3"
+  }
+}
+actions {
+  preamble {
+    id: 31198261
+    name: "MyIngress.check_list_0"
+    alias: "check_list_0"
+  }
+}
+actions {
+  preamble {
+    id: 27111352
+    name: "MyIngress.check_list_1"
+    alias: "check_list_1"
+  }
+}
+actions {
+  preamble {
+    id: 24692078
+    name: "MyIngress.check_list_2"
+    alias: "check_list_2"
+  }
+}
+actions {
+  preamble {
+    id: 20144355
+    name: "MyIngress.check_list_3"
+    alias: "check_list_3"
+  }
+}
 registers {
   preamble {
-    id: 380262112
-    name: "MyIngress.suspect_list"
-    alias: "suspect_list"
+    id: 384144469
+    name: "MyIngress.test"
+    alias: "test"
   }
   type_spec {
     bitstring {
       bit {
-        bitwidth: 256
+        bitwidth: 1
       }
     }
   }
@@ -195,21 +297,6 @@ registers {
     id: 369293415
     name: "MyIngress.suspect_list_low_3"
     alias: "suspect_list_low_3"
-  }
-  type_spec {
-    bitstring {
-      bit {
-        bitwidth: 256
-      }
-    }
-  }
-  size: 1
-}
-registers {
-  preamble {
-    id: 384447484
-    name: "MyIngress.remove_suspect_list"
-    alias: "remove_suspect_list"
   }
   type_spec {
     bitstring {

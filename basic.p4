@@ -2,6 +2,7 @@
 #include <core.p4>
 #include <v1model.p4>
 #define LIST_BIT_WIDTH  256
+#define LIST_SIZE 1024
 const bit<16> TYPE_IPV4 = 0x800;
 const bit<16> TYPE_Alarm = 0x800;
 const int WINDOW_SIZE = 8192;
@@ -44,7 +45,6 @@ header alarm_t {
 }
 
 header suspect_list_t {
-    bit<LIST_BIT_WIDTH> list;//TODO: to be removed
     bit<LIST_BIT_WIDTH> list0_high;
     bit<LIST_BIT_WIDTH> list0_low;
     bit<LIST_BIT_WIDTH> list1_high;
@@ -130,7 +130,9 @@ control MyIngress(inout headers hdr,
                   inout metadata meta,
                   inout standard_metadata_t standard_metadata) {
     //TODO: operation of two hash addresses neeeded
-    register<bit<LIST_BIT_WIDTH>>(1) suspect_list;
+    register<bit<1>>(1) test;
+    bit<1> flag;
+    //
     register<bit<LIST_BIT_WIDTH>>(1) suspect_list_high_0;
     register<bit<LIST_BIT_WIDTH>>(1) suspect_list_low_0;
     register<bit<LIST_BIT_WIDTH>>(1) suspect_list_high_1;
@@ -139,7 +141,6 @@ control MyIngress(inout headers hdr,
     register<bit<LIST_BIT_WIDTH>>(1) suspect_list_low_2;
     register<bit<LIST_BIT_WIDTH>>(1) suspect_list_high_3;
     register<bit<LIST_BIT_WIDTH>>(1) suspect_list_low_3;
-    register<bit<LIST_BIT_WIDTH>>(1) remove_suspect_list;
     bit<LIST_BIT_WIDTH> list_low_value_0;
     bit<LIST_BIT_WIDTH> list_high_value_0;
     bit<LIST_BIT_WIDTH> list_low_value_1;
@@ -155,22 +156,6 @@ control MyIngress(inout headers hdr,
     bit<10> addr;
     bit<8> addr8;
     bool isSuspect;//isSuspect 1
-    action addSuspect() {
-        bit<LIST_BIT_WIDTH> res_suspect_list;
-        suspect_list.read(res_suspect_list, 0);
-        res_suspect_list = res_suspect_list | hdr.suspect_list_h.list;
-        suspect_list.write(0, res_suspect_list);
-    }
-    action removeSuspect(bit<32> ip_addr) {
-        bit<8> pos1;
-        bit<LIST_BIT_WIDTH> res_remove_suspect;
-        hash(pos1, HashAlgorithm.crc16, (bit<8>)0, {ip_addr}, (bit<9>)LIST_BIT_WIDTH);
-        remove_suspect_list.read(res_remove_suspect, 0);
-        remove_suspect_list.write(0, res_remove_suspect | (bit<LIST_BIT_WIDTH>)1 << pos1);
-    }
-    /*action checkSuspect(out bool isSuspect, bit<32> ip_addr) {
-
-    }*/
     action drop() {
         mark_to_drop(standard_metadata);
     }
@@ -294,22 +279,22 @@ control MyIngress(inout headers hdr,
     action check_list_0() {
         addr8 = (bit<8>)addr;
         bit_mask = (bit<LIST_BIT_WIDTH>)1 << (bit<8>)addr;
-        entry_count = ((list_high_value_0 & bit_mask) >> (addr8 + 1)) + ((list_low_value_0 & bit_mask) >> addr8) + 1;
+        entry_count = ((list_high_value_0 & bit_mask) >> (addr8 + 1)) + ((list_low_value_0 & bit_mask) >> addr8);
     }
     action check_list_1() {
         addr8 = (bit<8>)(addr - 256);
         bit_mask = (bit<LIST_BIT_WIDTH>)1 << addr8;
-        entry_count = ((list_high_value_1 & bit_mask) >> (addr8 + 1)) + ((list_low_value_1 & bit_mask) >> addr8) + 1;
+        entry_count = ((list_high_value_1 & bit_mask) >> (addr8 + 1)) + ((list_low_value_1 & bit_mask) >> addr8);
     }
     action check_list_2() {
         addr8 = (bit<8>)(addr - 512);
         bit_mask = (bit<LIST_BIT_WIDTH>)1 << 8;
-        entry_count = ((list_high_value_2 & bit_mask) >> (addr8 + 1)) + ((list_low_value_2 & bit_mask) >> addr8) + 1;
+        entry_count = ((list_high_value_2 & bit_mask) >> (addr8 + 1)) + ((list_low_value_2 & bit_mask) >> addr8);
     }
     action check_list_3() {
         addr8 = (bit<8>)(addr - 768);
         bit_mask = (bit<LIST_BIT_WIDTH>)1 << addr8;
-        entry_count = ((list_high_value_3 & bit_mask) >> (addr8 + 1)) + ((list_low_value_3 & bit_mask) >> addr8) + 1;
+        entry_count = ((list_high_value_3 & bit_mask) >> (addr8 + 1)) + ((list_low_value_3 & bit_mask) >> addr8);
     }
     table check_suspect {
         key = {
@@ -343,46 +328,34 @@ control MyIngress(inout headers hdr,
         suspect_list_low_2.read(list_low_value_2, 0);
         suspect_list_high_3.read(list_high_value_3, 0);
         suspect_list_low_3.read(list_low_value_3, 0);
-
+        test.read(flag,0);
+        if(flag == 0) {
+            hash(addr, HashAlgorithm.crc16, (bit<32>)0,{(bit<32>)0x0A000101},(bit<32>)LIST_SIZE);
+            add_suspect.apply();
+            //remove_suspect.apply();
+            flag=1;
+            test.write(0,flag);
+            log_msg("test");
+        }
         if(hdr.ipv4.isValid()) {
             ipv4_lpm.apply();
         }
+
+        hash(addr, HashAlgorithm.crc16,(bit<32>)0, {(bit<32>)hdr.ipv4.srcAddr},(bit<32>)LIST_SIZE);
         //remove ip in suspect_list
         if(hdr.removed_ip_h.isValid()) {
-            removeSuspect(hdr.removed_ip_h.removed_ip);
-            bit<LIST_BIT_WIDTH> res_suspect; bit<LIST_BIT_WIDTH> res_remove_suspect;
-            suspect_list.read(res_suspect, 0);
-            remove_suspect_list.read(res_remove_suspect, 0);
-            if(res_suspect == res_remove_suspect) {
-                suspect_list.write(0, (bit<LIST_BIT_WIDTH>)0);
-                remove_suspect_list.write(0, (bit<LIST_BIT_WIDTH>)0);
-            }
+            //remove_suspect.apply();
         }
         //add suspect_list
         if(hdr.suspect_list_h.isValid()) {
-            addSuspect();
-        }
-        //check suspect
-        bit<8> pos1;
-        bit<LIST_BIT_WIDTH> res_suspect; bit<LIST_BIT_WIDTH> res_remove_suspect;
-        hash(pos1, HashAlgorithm.crc16, (bit<8>)0, {hdr.ipv4.srcAddr}, (bit<9>)LIST_BIT_WIDTH);
-        remove_suspect_list.read(res_remove_suspect, 0);
-        //ip addr isn't removed
-        if((res_remove_suspect & (bit<LIST_BIT_WIDTH>)1 << pos1) == 0 ) {
-            suspect_list.read(res_suspect, 0);
-            if((res_suspect & (bit<LIST_BIT_WIDTH>)1 << pos1) != 0) {
-                isSuspect = true;
-            }
-            else {
-                isSuspect = false;
-            }
-        }
-        else {
-            isSuspect = false;
+            //add_suspect.apply();
         }
         //TODO:suspect checked
-        if(isSuspect) {
-
+        check_suspect.apply();
+        log_msg("count: {} {} {}",{hdr.ipv4.srcAddr,hdr.ipv4.dstAddr,entry_count});
+        if(entry_count > 0) {
+            drop();
+            log_msg("drop");
         }
         //apply the whole suspect list
         suspect_list_high_0.write(0, list_high_value_0);

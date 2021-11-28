@@ -1,10 +1,10 @@
 
-[2021-11-21 17:03:23.983] /p4.v1.P4Runtime/SetForwardingPipelineConfig
+[2021-11-28 17:24:47.049] /p4.v1.P4Runtime/SetForwardingPipelineConfig
 ---
-Message too long (63568 bytes)! Skipping log...
+Message too long (306376 bytes)! Skipping log...
 ---
 
-[2021-11-21 17:03:24.006] /p4.v1.P4Runtime/Write
+[2021-11-28 17:24:47.097] /p4.v1.P4Runtime/Write
 ---
 device_id: 2
 election_id {
@@ -26,7 +26,7 @@ updates {
 }
 ---
 
-[2021-11-21 17:03:24.009] /p4.v1.P4Runtime/Write
+[2021-11-28 17:24:47.099] /p4.v1.P4Runtime/Write
 ---
 device_id: 2
 election_id {
@@ -49,7 +49,7 @@ updates {
           action_id: 28792405
           params {
             param_id: 1
-            value: "\010\000\000\000\001\000"
+            value: "\010\000\000\000\001\021"
           }
           params {
             param_id: 2
@@ -62,7 +62,7 @@ updates {
 }
 ---
 
-[2021-11-21 17:03:24.011] /p4.v1.P4Runtime/Write
+[2021-11-28 17:24:47.101] /p4.v1.P4Runtime/Write
 ---
 device_id: 2
 election_id {
@@ -85,7 +85,7 @@ updates {
           action_id: 28792405
           params {
             param_id: 1
-            value: "\010\000\000\000\001\000"
+            value: "\010\000\000\000\002\""
           }
           params {
             param_id: 2
@@ -98,7 +98,7 @@ updates {
 }
 ---
 
-[2021-11-21 17:03:24.013] /p4.v1.P4Runtime/Write
+[2021-11-28 17:24:47.103] /p4.v1.P4Runtime/Write
 ---
 device_id: 2
 election_id {
@@ -121,7 +121,7 @@ updates {
           action_id: 28792405
           params {
             param_id: 1
-            value: "\010\000\000\000\002\000"
+            value: "\010\000\000\000\0033"
           }
           params {
             param_id: 2
@@ -134,7 +134,7 @@ updates {
 }
 ---
 
-[2021-11-21 17:03:24.015] /p4.v1.P4Runtime/Write
+[2021-11-28 17:24:47.106] /p4.v1.P4Runtime/Write
 ---
 device_id: 2
 election_id {
@@ -157,7 +157,7 @@ updates {
           action_id: 28792405
           params {
             param_id: 1
-            value: "\010\000\000\000\002\000"
+            value: "\010\000\000\000\004D"
           }
           params {
             param_id: 2
