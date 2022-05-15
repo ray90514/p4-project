@@ -17,12 +17,10 @@
         "s1": { "runtime_json" : "pod-topo/s1-runtime.json" },
         "s2": { "runtime_json" : "pod-topo/s2-runtime.json" },
         "s3": { "runtime_json" : "pod-topo/s3-runtime.json" },
-        "s4": { "runtime_json" : "pod-topo/s4-runtime.json" },
-        "s5": { "runtime_json" : "pod-topo/s5-runtime.json" }
+        "s4": { "runtime_json" : "pod-topo/s4-runtime.json" }
     },
     "links": [
-        ["h1", "s1-p1"], ["h2", "s2-p2"], ["h3", "s3-p3"], ["h4","s4-p4"],
-        ["s1-p2", "s5-p2"], ["s2-p3", "s5-p3"], ["s5-p1", "s4-p1"], ["s3-p2", "s4-p2"]
-
+        ["h1", "s1-p1"], ["h2", "s1-p2"], ["s1-p3", "s3-p1"], ["s1-p4", "s4-p2"],
+        ["h3", "s2-p1"], ["h4", "s2-p2"], ["s2-p3", "s4-p1"], ["s2-p4", "s3-p2"]
     ]
 }

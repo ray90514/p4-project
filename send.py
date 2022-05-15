@@ -8,24 +8,6 @@ import struct
 from scapy.all import sendp, send, get_if_list, get_if_hwaddr
 from scapy.all import Packet
 from scapy.all import Ether, IP, UDP, TCP
-from scapy.all import ByteField, BitField
-class Alarm(Packet):
-    name = 'alarm_header'
-    fields_desc = [ ByteField("isSuspectList", 0)]
-class SuspectList(Packet):
-    name = 'suspect_list'
-    fields_desc = [ BitField("list0_high", 0, 256),
-                    BitField("list0_low", 0, 256),
-                    BitField("list1_high", 0, 256),
-                    BitField("list1_low", 0, 256),
-                    BitField("list2_high", 0, 256),
-                    BitField("list2_low", 0, 256),
-                    BitField("list3_high", 0, 256),
-                    BitField("list3_low", 0, 256)]
-
-class RemovedIp(Packet):
-    name = 'removed_ip'
-    fields_desc = [ BitField("removed_ip", 0, 32)]
 
 def get_if():
     ifs=get_if_list()

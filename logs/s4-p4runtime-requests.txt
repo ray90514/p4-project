@@ -1,10 +1,10 @@
 
-[2021-11-28 17:24:47.117] /p4.v1.P4Runtime/SetForwardingPipelineConfig
+[2022-05-15 08:34:44.717] /p4.v1.P4Runtime/SetForwardingPipelineConfig
 ---
-Message too long (306376 bytes)! Skipping log...
+Message too long (35934 bytes)! Skipping log...
 ---
 
-[2021-11-28 17:24:47.165] /p4.v1.P4Runtime/Write
+[2022-05-15 08:34:44.740] /p4.v1.P4Runtime/Write
 ---
 device_id: 3
 election_id {
@@ -26,7 +26,7 @@ updates {
 }
 ---
 
-[2021-11-28 17:24:47.167] /p4.v1.P4Runtime/Write
+[2022-05-15 08:34:44.746] /p4.v1.P4Runtime/Write
 ---
 device_id: 3
 election_id {
@@ -49,11 +49,11 @@ updates {
           action_id: 28792405
           params {
             param_id: 1
-            value: "\010\000\000\000\001\021"
+            value: "\010\000\000\000\001\000"
           }
           params {
             param_id: 2
-            value: "\000\001"
+            value: "\000\002"
           }
         }
       }
@@ -62,7 +62,7 @@ updates {
 }
 ---
 
-[2021-11-28 17:24:47.169] /p4.v1.P4Runtime/Write
+[2022-05-15 08:34:44.748] /p4.v1.P4Runtime/Write
 ---
 device_id: 3
 election_id {
@@ -85,11 +85,11 @@ updates {
           action_id: 28792405
           params {
             param_id: 1
-            value: "\010\000\000\000\002\""
+            value: "\010\000\000\000\001\000"
           }
           params {
             param_id: 2
-            value: "\000\001"
+            value: "\000\002"
           }
         }
       }
@@ -98,7 +98,7 @@ updates {
 }
 ---
 
-[2021-11-28 17:24:47.171] /p4.v1.P4Runtime/Write
+[2022-05-15 08:34:44.749] /p4.v1.P4Runtime/Write
 ---
 device_id: 3
 election_id {
@@ -121,11 +121,11 @@ updates {
           action_id: 28792405
           params {
             param_id: 1
-            value: "\010\000\000\000\0033"
+            value: "\010\000\000\000\002\000"
           }
           params {
             param_id: 2
-            value: "\000\002"
+            value: "\000\001"
           }
         }
       }
@@ -134,7 +134,7 @@ updates {
 }
 ---
 
-[2021-11-28 17:24:47.174] /p4.v1.P4Runtime/Write
+[2022-05-15 08:34:44.751] /p4.v1.P4Runtime/Write
 ---
 device_id: 3
 election_id {
@@ -157,11 +157,11 @@ updates {
           action_id: 28792405
           params {
             param_id: 1
-            value: "\010\000\000\000\004D"
+            value: "\010\000\000\000\002\000"
           }
           params {
             param_id: 2
-            value: "\000\004"
+            value: "\000\001"
           }
         }
       }

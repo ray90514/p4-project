@@ -1,0 +1,5 @@
+message WriteRequest {
+    device_id:0,
+    election_id.low:1,
+    updates:
+}

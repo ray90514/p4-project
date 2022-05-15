@@ -1,10 +1,10 @@
 
-[2021-11-28 17:24:46.970] /p4.v1.P4Runtime/SetForwardingPipelineConfig
+[2022-05-15 08:34:44.647] /p4.v1.P4Runtime/SetForwardingPipelineConfig
 ---
-Message too long (306376 bytes)! Skipping log...
+Message too long (35934 bytes)! Skipping log...
 ---
 
-[2021-11-28 17:24:47.026] /p4.v1.P4Runtime/Write
+[2022-05-15 08:34:44.663] /p4.v1.P4Runtime/Write
 ---
 device_id: 1
 election_id {
@@ -26,7 +26,7 @@ updates {
 }
 ---
 
-[2021-11-28 17:24:47.028] /p4.v1.P4Runtime/Write
+[2022-05-15 08:34:44.666] /p4.v1.P4Runtime/Write
 ---
 device_id: 1
 election_id {
@@ -49,11 +49,11 @@ updates {
           action_id: 28792405
           params {
             param_id: 1
-            value: "\010\000\000\000\001\021"
+            value: "\010\000\000\000\003\000"
           }
           params {
             param_id: 2
-            value: "\000\003"
+            value: "\000\004"
           }
         }
       }
@@ -62,7 +62,7 @@ updates {
 }
 ---
 
-[2021-11-28 17:24:47.030] /p4.v1.P4Runtime/Write
+[2022-05-15 08:34:44.669] /p4.v1.P4Runtime/Write
 ---
 device_id: 1
 election_id {
@@ -85,11 +85,11 @@ updates {
           action_id: 28792405
           params {
             param_id: 1
-            value: "\010\000\000\000\002\""
+            value: "\010\000\000\000\004\000"
           }
           params {
             param_id: 2
-            value: "\000\002"
+            value: "\000\003"
           }
         }
       }
@@ -98,7 +98,7 @@ updates {
 }
 ---
 
-[2021-11-28 17:24:47.033] /p4.v1.P4Runtime/Write
+[2022-05-15 08:34:44.671] /p4.v1.P4Runtime/Write
 ---
 device_id: 1
 election_id {
@@ -125,7 +125,7 @@ updates {
           }
           params {
             param_id: 2
-            value: "\000\003"
+            value: "\000\001"
           }
         }
       }
@@ -134,7 +134,7 @@ updates {
 }
 ---
 
-[2021-11-28 17:24:47.035] /p4.v1.P4Runtime/Write
+[2022-05-15 08:34:44.673] /p4.v1.P4Runtime/Write
 ---
 device_id: 1
 election_id {
@@ -161,7 +161,7 @@ updates {
           }
           params {
             param_id: 2
-            value: "\000\003"
+            value: "\000\002"
           }
         }
       }

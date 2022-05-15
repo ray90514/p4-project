@@ -24,66 +24,6 @@ tables {
   }
   size: 1024
 }
-tables {
-  preamble {
-    id: 43799925
-    name: "MyIngress.add_suspect"
-    alias: "add_suspect"
-  }
-  match_fields {
-    id: 1
-    name: "addr"
-    bitwidth: 10
-    match_type: RANGE
-  }
-  action_refs {
-    id: 19891532
-  }
-  action_refs {
-    id: 25551353
-  }
-  action_refs {
-    id: 26430483
-  }
-  action_refs {
-    id: 31762614
-  }
-  action_refs {
-    id: 21257015
-  }
-  size: 1024
-  is_const_table: true
-}
-tables {
-  preamble {
-    id: 36503186
-    name: "MyIngress.check_suspect"
-    alias: "check_suspect"
-  }
-  match_fields {
-    id: 1
-    name: "addr"
-    bitwidth: 10
-    match_type: RANGE
-  }
-  action_refs {
-    id: 31198261
-  }
-  action_refs {
-    id: 27111352
-  }
-  action_refs {
-    id: 24692078
-  }
-  action_refs {
-    id: 20144355
-  }
-  action_refs {
-    id: 21257015
-  }
-  size: 1024
-  is_const_table: true
-}
 actions {
   preamble {
     id: 21257015
@@ -116,72 +56,16 @@ actions {
     bitwidth: 9
   }
 }
-actions {
-  preamble {
-    id: 19891532
-    name: "MyIngress.add_list_0"
-    alias: "add_list_0"
-  }
-}
-actions {
-  preamble {
-    id: 25551353
-    name: "MyIngress.add_list_1"
-    alias: "add_list_1"
-  }
-}
-actions {
-  preamble {
-    id: 26430483
-    name: "MyIngress.add_list_2"
-    alias: "add_list_2"
-  }
-}
-actions {
-  preamble {
-    id: 31762614
-    name: "MyIngress.add_list_3"
-    alias: "add_list_3"
-  }
-}
-actions {
-  preamble {
-    id: 31198261
-    name: "MyIngress.check_list_0"
-    alias: "check_list_0"
-  }
-}
-actions {
-  preamble {
-    id: 27111352
-    name: "MyIngress.check_list_1"
-    alias: "check_list_1"
-  }
-}
-actions {
-  preamble {
-    id: 24692078
-    name: "MyIngress.check_list_2"
-    alias: "check_list_2"
-  }
-}
-actions {
-  preamble {
-    id: 20144355
-    name: "MyIngress.check_list_3"
-    alias: "check_list_3"
-  }
-}
 registers {
   preamble {
-    id: 384144469
-    name: "MyIngress.test"
-    alias: "test"
+    id: 377685896
+    name: "MyIngress.reg_prev_time"
+    alias: "reg_prev_time"
   }
   type_spec {
     bitstring {
       bit {
-        bitwidth: 1
+        bitwidth: 48
       }
     }
   }
@@ -189,14 +73,14 @@ registers {
 }
 registers {
   preamble {
-    id: 382900530
-    name: "MyIngress.suspect_list_high_0"
-    alias: "suspect_list_high_0"
+    id: 377283343
+    name: "MyIngress.reg_packet_count"
+    alias: "reg_packet_count"
   }
   type_spec {
     bitstring {
       bit {
-        bitwidth: 256
+        bitwidth: 32
       }
     }
   }
@@ -204,108 +88,65 @@ registers {
 }
 registers {
   preamble {
-    id: 370462346
-    name: "MyIngress.suspect_list_low_0"
-    alias: "suspect_list_low_0"
+    id: 379012626
+    name: "MyIngress.reg_packet_size"
+    alias: "reg_packet_size"
   }
   type_spec {
     bitstring {
       bit {
-        bitwidth: 256
+        bitwidth: 32
       }
     }
   }
   size: 1
 }
-registers {
+digests {
   preamble {
-    id: 385157870
-    name: "MyIngress.suspect_list_high_1"
-    alias: "suspect_list_high_1"
+    id: 389049336
+    name: "digest_t"
+    alias: "digest_t"
   }
   type_spec {
-    bitstring {
-      bit {
-        bitwidth: 256
-      }
+    struct {
+      name: "digest_t"
     }
   }
-  size: 1
-}
-registers {
-  preamble {
-    id: 376254780
-    name: "MyIngress.suspect_list_low_1"
-    alias: "suspect_list_low_1"
-  }
-  type_spec {
-    bitstring {
-      bit {
-        bitwidth: 256
-      }
-    }
-  }
-  size: 1
-}
-registers {
-  preamble {
-    id: 369567506
-    name: "MyIngress.suspect_list_high_2"
-    alias: "suspect_list_high_2"
-  }
-  type_spec {
-    bitstring {
-      bit {
-        bitwidth: 256
-      }
-    }
-  }
-  size: 1
-}
-registers {
-  preamble {
-    id: 380671427
-    name: "MyIngress.suspect_list_low_2"
-    alias: "suspect_list_low_2"
-  }
-  type_spec {
-    bitstring {
-      bit {
-        bitwidth: 256
-      }
-    }
-  }
-  size: 1
-}
-registers {
-  preamble {
-    id: 376561126
-    name: "MyIngress.suspect_list_high_3"
-    alias: "suspect_list_high_3"
-  }
-  type_spec {
-    bitstring {
-      bit {
-        bitwidth: 256
-      }
-    }
-  }
-  size: 1
-}
-registers {
-  preamble {
-    id: 369293415
-    name: "MyIngress.suspect_list_low_3"
-    alias: "suspect_list_low_3"
-  }
-  type_spec {
-    bitstring {
-      bit {
-        bitwidth: 256
-      }
-    }
-  }
-  size: 1
 }
 type_info {
+  structs {
+    key: "digest_t"
+    value {
+      members {
+        name: "packet_count"
+        type_spec {
+          bitstring {
+            bit {
+              bitwidth: 32
+            }
+          }
+        }
+      }
+      members {
+        name: "packet_size"
+        type_spec {
+          bitstring {
+            bit {
+              bitwidth: 32
+            }
+          }
+        }
+      }
+      members {
+        name: "interval"
+        type_spec {
+          bitstring {
+            bit {
+              bitwidth: 48
+            }
+          }
+        }
+      }
+    }
+  }
 }
