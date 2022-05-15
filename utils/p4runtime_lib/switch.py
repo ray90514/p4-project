@@ -147,13 +147,6 @@ class SwitchConnection(object):
                 if response.WhichOneof('update') == 'digest':
                     yield response.digest
     def DigestConfig(self, digest_entry, dry_run=False):
-        request = p4runtime_pb2.ReadRequest()
-        request.device_id = self.device_id
-        entity = request.entities.add()
-        entity.digest_entry.digest_id = digest_entry.digest_id
-        for response in self.client_stub.Read(request):
-            if response != None:
-                return
 
         request = p4runtime_pb2.WriteRequest()
         request.device_id = self.device_id
