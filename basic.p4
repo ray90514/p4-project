@@ -3,7 +3,8 @@
 #include <v1model.p4>
 
 const bit<16> TYPE_IPV4 = 0x800;
-
+const bit<8> PROTOCOL_TCP = 0x06;
+const bit<8> PROTOCOL_UDP = 0x11;
 /*************************************************************************
 *********************** H E A D E R S  ***********************************
 *************************************************************************/
@@ -46,6 +47,8 @@ struct headers {
 struct digest_t {
     bit<32> packet_count;
     bit<32> packet_size;
+    bit<32> tcp_count;
+    bit<32> udp_count;
     time_t interval;
 }
 
@@ -99,6 +102,8 @@ control MyIngress(inout headers hdr,
     register<time_t>(1) reg_prev_time;
     register<bit<32>>(1) reg_packet_count;
     register<bit<32>>(1) reg_packet_size;
+    register<bit<32>>(1) reg_tcp_count;
+    register<bit<32>>(1) reg_udp_count;
 
     action drop() {
         mark_to_drop(standard_metadata);
@@ -131,27 +136,42 @@ control MyIngress(inout headers hdr,
          time_t prev_time;
          bit<32> packet_count;
          bit<32> packet_size;
+         bit<32> udp_count;
+         bit<32> tcp_count;
 
          reg_prev_time.read(prev_time, 0);
          reg_packet_size.read(packet_size, 0);
          reg_packet_count.read(packet_count,0);
+         reg_tcp_count.read(tcp_count,0);
+         reg_udp_count.read(udp_count,0);
 
          packet_count = packet_count + 1;
          packet_size = standard_metadata.packet_length + packet_size;
+         if(hdr.ipv4.protocol == PROTOCOL_TCP) {
+             tcp_count = tcp_count + 1;
+         }
+         else if(hdr.ipv4.protocol == PROTOCOL_UDP) {
+             udp_count = udp_count + 1;
+         }
 
-         if(standard_metadata.ingress_global_timestamp - prev_time > 8192) {
+         if(standard_metadata.ingress_global_timestamp - prev_time > 10000) {
              digest_t info;
              info.packet_size = packet_size;
              info.packet_count = packet_count;
+             info.tcp_count = tcp_count;
+             info.udp_count = udp_count;
              info.interval = standard_metadata.ingress_global_timestamp - prev_time;
              digest<digest_t>(0, info);
-             log_msg("digest");
              packet_size = 0;
              packet_count = 0;
+             tcp_count = 0;
+             udp_count = 0;
              reg_prev_time.write(0, standard_metadata.ingress_global_timestamp);
          }
          reg_packet_count.write(0, packet_count);
          reg_packet_size.write(0, packet_size);
+         reg_tcp_count.write(0, tcp_count);
+         reg_udp_count.write(0, tcp_count);
 
          if(hdr.ipv4.isValid()) {
             ipv4_lpm.apply();
