@@ -137,21 +137,21 @@ def readDigest(p4info_helper, sw):
         for digest in sw.ReadDigest(digest_id, list_id):
             list_id = digest.list_id
             for data in digest.data:
-                packet_count = int.from_bytes(data.struct.members[0].bitstring, 'little')
-                packet_size = int.from_bytes(data.struct.members[1].bitstring, 'little') / packet_count
-                tcp_count = int.from_bytes(data.struct.members[2].bitstring, 'little')
-                udp_count = int.from_bytes(data.struct.members[3].bitstring, 'little')
-                syn_count = int.from_bytes(data.struct.members[4].bitstring, 'little')
-                interval = int.from_bytes(data.struct.members[5].bitstring, 'little') / packet_count
+                packet_count = int.from_bytes(data.struct.members[0].bitstring, 'big')
+                packet_size = int.from_bytes(data.struct.members[1].bitstring, 'big')
+                tcp_count = int.from_bytes(data.struct.members[2].bitstring, 'big')
+                udp_count = int.from_bytes(data.struct.members[3].bitstring, 'big')
+                syn_count = int.from_bytes(data.struct.members[4].bitstring, 'big')
+                interval = int.from_bytes(data.struct.members[5].bitstring, 'big')
                 print('---------------------------')
-                #print(f'packet_count: {packet_count}')
-                #print(f'packet_length: {packet_size}')
-                #print(f'tcp_count: {tcp_count}')
-                #print(f'udp_count: {udp_count}')
-                #print(f'syn_count: {syn_count}')
-                #print(f'interval: {interval}')
-                a = packet_size/packet_count
-                b = interval/(packet_count*1000000000)
+                print(f'packet_count: {packet_count}')
+                print(f'packet_length: {packet_size}')
+                print(f'tcp_count: {tcp_count}')
+                print(f'udp_count: {udp_count}')
+                print(f'syn_count: {syn_count}')
+                print(f'interval: {interval}')
+                a = packet_size/ packet_count
+                b = interval/(1000000000*packet_count)
                 c = tcp_count/packet_count
                 d = udp_count/packet_count
                 if tcp_count == 0 :
@@ -165,9 +165,9 @@ def readDigest(p4info_helper, sw):
                 print(f'syn/tcp: {e}')
                 target = RF.predict(np.array([[a,b,c,d,e]]))
                 if target == 1:
-                    print('Under attacking!!!')
+                    print("\033[91m%s\033[0m"%"Under attacking!!!")
                 else:
-                    print('BENGIN')
+                    print("\033[93m%s\033[0m"%'BENGIN')
 
 
 def printCounter(p4info_helper, sw, counter_name, index):

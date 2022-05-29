@@ -184,7 +184,7 @@ control MyIngress(inout headers hdr,
              syn_count = syn_count + 1;
          }
 
-         if(standard_metadata.ingress_global_timestamp - prev_time > 10000) {
+         if(standard_metadata.ingress_global_timestamp - prev_time > 1000000) {
              digest_t info;
              info.packet_size = packet_size;
              info.packet_count = packet_count;
