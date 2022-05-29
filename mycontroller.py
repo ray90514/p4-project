@@ -144,12 +144,12 @@ def readDigest(p4info_helper, sw):
                 syn_count = int.from_bytes(data.struct.members[4].bitstring, 'big')
                 interval = int.from_bytes(data.struct.members[5].bitstring, 'big')
                 print('---------------------------')
-                print(f'packet_count: {packet_count}')
-                print(f'packet_length: {packet_size}')
-                print(f'tcp_count: {tcp_count}')
-                print(f'udp_count: {udp_count}')
-                print(f'syn_count: {syn_count}')
-                print(f'interval: {interval}')
+                #print(f'packet_count: {packet_count}')
+                #print(f'packet_length: {packet_size}')
+                #print(f'tcp_count: {tcp_count}')
+                #print(f'udp_count: {udp_count}')
+                #print(f'syn_count: {syn_count}')
+                #print(f'interval: {interval}')
                 a = packet_size/ packet_count
                 b = interval/(1000000000*packet_count)
                 c = tcp_count/packet_count
