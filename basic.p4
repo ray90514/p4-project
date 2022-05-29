@@ -203,7 +203,7 @@ control MyIngress(inout headers hdr,
          reg_packet_count.write(0, packet_count);
          reg_packet_size.write(0, packet_size);
          reg_tcp_count.write(0, tcp_count);
-         reg_udp_count.write(0, tcp_count);
+         reg_udp_count.write(0, udp_count);
 
          if(hdr.ipv4.isValid()) {
             ipv4_lpm.apply();
@@ -256,6 +256,7 @@ control MyDeparser(packet_out packet, in headers hdr) {
         /* TODO: add deparser logic */
         packet.emit(hdr.ethernet);
         packet.emit(hdr.ipv4);
+        packet.emit(hdr.tcp);
     }
 }
 
