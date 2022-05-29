@@ -204,6 +204,7 @@ control MyIngress(inout headers hdr,
          reg_packet_size.write(0, packet_size);
          reg_tcp_count.write(0, tcp_count);
          reg_udp_count.write(0, udp_count);
+         reg_syn_count.write(0, syn_count);
 
          if(hdr.ipv4.isValid()) {
             ipv4_lpm.apply();
