@@ -35,6 +35,20 @@ header ipv4_t {
     ip4Addr_t dstAddr;
 }
 
+header tcp_t {
+    bit<16> srcPort;
+    bit<16> dstPort;
+    bit<32> seqNo;
+    bit<32> ackNo;
+    bit<4>  dataOffset;
+    bit<3>  res;
+    bit<3>  ecn;
+    bit<6>  ctrl;
+    bit<16> window;
+    bit<16> checksum;
+    bit<16> urgentPtr;
+}
+
 struct metadata {
     /* empty */
 }
@@ -42,6 +56,7 @@ struct metadata {
 struct headers {
     ethernet_t   ethernet;
     ipv4_t       ipv4;
+    tcp_t      tcp;
 }
 
 struct digest_t {
@@ -49,6 +64,7 @@ struct digest_t {
     bit<32> packet_size;
     bit<32> tcp_count;
     bit<32> udp_count;
+    bit<32> syn_count;
     time_t interval;
 }
 
@@ -77,6 +93,14 @@ parser MyParser(packet_in packet,
 
     state parse_ipv4 {
         packet.extract(hdr.ipv4);
+        transition select(hdr.ipv4.protocol) {
+            PROTOCOL_TCP: parse_tcp;
+            default: accept;
+        }
+    }
+
+    state parse_tcp {
+        packet.extract(hdr.tcp);
         transition accept;
     }
 }
@@ -104,6 +128,7 @@ control MyIngress(inout headers hdr,
     register<bit<32>>(1) reg_packet_size;
     register<bit<32>>(1) reg_tcp_count;
     register<bit<32>>(1) reg_udp_count;
+    register<bit<32>>(1) reg_syn_count;
 
     action drop() {
         mark_to_drop(standard_metadata);
@@ -138,12 +163,14 @@ control MyIngress(inout headers hdr,
          bit<32> packet_size;
          bit<32> udp_count;
          bit<32> tcp_count;
+         bit<32> syn_count;
 
          reg_prev_time.read(prev_time, 0);
          reg_packet_size.read(packet_size, 0);
          reg_packet_count.read(packet_count,0);
          reg_tcp_count.read(tcp_count,0);
          reg_udp_count.read(udp_count,0);
+         reg_syn_count.read(syn_count,0);
 
          packet_count = packet_count + 1;
          packet_size = standard_metadata.packet_length + packet_size;
@@ -153,6 +180,9 @@ control MyIngress(inout headers hdr,
          else if(hdr.ipv4.protocol == PROTOCOL_UDP) {
              udp_count = udp_count + 1;
          }
+         if(hdr.tcp.ctrl & 0x2 != 0) {
+             syn_count = syn_count + 1;
+         }
 
          if(standard_metadata.ingress_global_timestamp - prev_time > 10000) {
              digest_t info;
@@ -160,12 +190,14 @@ control MyIngress(inout headers hdr,
              info.packet_count = packet_count;
              info.tcp_count = tcp_count;
              info.udp_count = udp_count;
+             info.syn_count = syn_count;
              info.interval = standard_metadata.ingress_global_timestamp - prev_time;
              digest<digest_t>(0, info);
              packet_size = 0;
              packet_count = 0;
              tcp_count = 0;
              udp_count = 0;
+             syn_count = 0;
              reg_prev_time.write(0, standard_metadata.ingress_global_timestamp);
          }
          reg_packet_count.write(0, packet_count);
