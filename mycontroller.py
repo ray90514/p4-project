@@ -5,6 +5,9 @@ import os
 import sys
 import threading
 from time import sleep
+import numpy as np
+import joblib
+import warnings
 
 # Import P4Runtime lib from parent utils dir
 # Probably there's a better way of doing this.
@@ -141,12 +144,32 @@ def readDigest(p4info_helper, sw):
                 syn_count = int.from_bytes(data.struct.members[4].bitstring, 'little')
                 interval = int.from_bytes(data.struct.members[5].bitstring, 'little') / packet_count
                 print('---------------------------')
-                print(f'packet_count: {packet_count}')
-                print(f'packet_length: {packet_size}')
-                print(f'tcp_count: {tcp_count}')
-                print(f'udp_count: {udp_count}')
-                print(f'syn_count: {syn_count}')
-                print(f'interval: {interval}')
+                #print(f'packet_count: {packet_count}')
+                #print(f'packet_length: {packet_size}')
+                #print(f'tcp_count: {tcp_count}')
+                #print(f'udp_count: {udp_count}')
+                #print(f'syn_count: {syn_count}')
+                #print(f'interval: {interval}')
+                a = packet_size/packet_count
+                b = interval/(packet_count*1000000000)
+                c = tcp_count/packet_count
+                d = udp_count/packet_count
+                if tcp_count == 0 :
+                    e = 0.0
+                else :
+                    e = syn_count/tcp_count
+                print(f'packet size: {a}')
+                print(f'interval: {b}')
+                print(f'tcp ratio: {c}')
+                print(f'udp ratio: {d}')
+                print(f'syn/tcp: {e}')
+                target = RF.predict(np.array([[a,b,c,d,e]]))
+                if target == 1:
+                    print('Under attacking!!!')
+                else:
+                    print('BENGIN')
+
+
 def printCounter(p4info_helper, sw, counter_name, index):
     """
     Reads the specified counter at the specified index from the switch. In our
@@ -238,4 +261,6 @@ if __name__ == '__main__':
         parser.print_help()
         print("\nBMv2 JSON file not found: %s\nHave you run 'make'?" % args.bmv2_json)
         parser.exit(1)
+    RF = joblib.load('RF')
+    warnings.filterwarnings("ignore")
     main(args.p4info, args.bmv2_json)

@@ -1,0 +1,18 @@
+
+[2022-05-29 08:30:03.708] /p4.v1.P4Runtime/Write
+---
+election_id {
+  low: 1
+}
+updates {
+  type: INSERT
+  entity {
+    digest_entry {
+      digest_id: 389049336
+      config {
+        max_list_size: 1
+      }
+    }
+  }
+}
+---
