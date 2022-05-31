@@ -195,6 +195,12 @@ class P4InfoHelper(object):
         digest_entry.config.ack_timeout_ns = 0
         digest_entry.config.max_list_size = 1
         return digest_entry
+    def buildRegisterEntry(self, register_id, index, data):
+        register_entry = p4runtime_pb2.RegisterEntry()
+        register_entry.register_id = register_id
+        register_entry.index.index = index
+        register_entry.data.bitstring = bytes(data)
+        return register_entry
     def buildMulticastGroupEntry(self, multicast_group_id, replicas):
         mc_entry = p4runtime_pb2.PacketReplicationEngineEntry()
         mc_entry.multicast_group_entry.multicast_group_id = multicast_group_id

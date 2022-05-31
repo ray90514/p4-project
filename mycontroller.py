@@ -130,8 +130,16 @@ def readDigest(p4info_helper, sw):
     """
     digest_id = p4info_helper.get_id("digests", "digest_t")
     digest_entry = p4info_helper.buildDigestEntry(digest_id)
+    table_entry = p4info_helper.buildTableEntry(table_name="MyIngress.update_is_attack_table",
+                                                default_action = True,
+                                                action_name="MyIngress.update_is_attack",
+                                                action_params={
+                                                "new_is_attack": 0,
+                                                })
     sw.DigestConfig(digest_entry)
+    sw.WriteTableEntry(table_entry)
     list_id = None
+    no_attack_count = 0
     while True:
         print('\n----- Reading digest(%d) for %s -----'%(digest_id, sw.name))
         for digest in sw.ReadDigest(digest_id, list_id):
@@ -166,8 +174,19 @@ def readDigest(p4info_helper, sw):
                 target = RF.predict(np.array([[a,b,c,d,e]]))
                 if target == 1:
                     print("\033[91m%s\033[0m"%"Under attacking!!!")
+                    no_attack_count = 0
+                    if not is_attack:
+                        table_entry.action.action.params[0].value = bytes(1)
+                        sw.WriteTableEntry(table_entry)
+                    is_attack = True
                 else:
                     print("\033[93m%s\033[0m"%'BENGIN')
+                    no_attack_count += 1
+                    if is_attack and no_attack_count == 10:
+                        table_entry.action.action.params[0].value = bytes(0)
+                        sw.WriteTableEntry(table_entry)
+                        no_attack_count = 0
+                    is_attack = False
 
 
 def printCounter(p4info_helper, sw, counter_name, index):
@@ -230,9 +249,10 @@ def main(p4info_file_path, bmv2_file_path):
         #digest_id = p4info_helper.get_id("digests", "digest")
         #digest_entry = p4info_helper.buildDigestEntry(digest_id)
         #s1.DigestConfig(digest_entry)
-        t = threading.Thread(target = readDigest, args = (p4info_helper, s1))
-        t.start()
+        #t = threading.Thread(target = readDigest, args = (p4info_helper, s1))
+        #t.start()
         #s1.DigestConfig(digest_id)
+        readDigest(p4info_helper, s1)
         while True:
             sleep(2)
 

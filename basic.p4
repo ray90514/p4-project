@@ -130,6 +130,13 @@ control MyIngress(inout headers hdr,
     register<bit<32>>(1) reg_udp_count;
     register<bit<32>>(1) reg_syn_count;
 
+    register<bit<8>>(4096) white_list_1;
+    register<bit<8>>(4096) white_list_2;
+    register<bit<8>>(1) reg_is_attack;
+    register<bit<8>>(1) reg_turn;
+    bit<8> turn;
+    bit<8> is_attack;
+
     action drop() {
         mark_to_drop(standard_metadata);
     }
@@ -139,6 +146,22 @@ control MyIngress(inout headers hdr,
         standard_metadata.egress_spec = port;
         hdr.ethernet.srcAddr = hdr.ethernet.dstAddr;
         hdr.ethernet.dstAddr = dstAddr;
+    }
+
+    action update_is_attack(bit<8> new_is_attack) {
+        is_attack = new_is_attack;
+    }
+
+    table update_is_attack_table {
+        key = {
+            is_attack : range;
+        }
+        actions = {
+            update_is_attack;
+            NoAction;
+        }
+        size = 128;
+        default_action = NoAction();
     }
 
     table ipv4_lpm {
@@ -158,6 +181,7 @@ control MyIngress(inout headers hdr,
         /* TODO: fix ingress control logic
          *  - ipv4_lpm should be applied only when IPv4 header is valid
          */
+
          time_t prev_time;
          bit<32> packet_count;
          bit<32> packet_size;
@@ -207,7 +231,32 @@ control MyIngress(inout headers hdr,
          reg_syn_count.write(0, syn_count);
 
          if(hdr.ipv4.isValid()) {
-            ipv4_lpm.apply();
+             ipv4_lpm.apply();
+         }
+
+         bit<32> addr1;
+         bit<32> addr2;
+         bit<8> old_is_attack;
+         reg_is_attack.read(old_is_attack,0);
+         update_is_attack_table.apply();
+         if(is_attack == 0 && old_is_attack == 1)
+            turn = turn + 1;
+         reg_is_attack.write(0, is_attack);
+         reg_turn.write(0, turn);
+         hash(addr1, HashAlgorithm.crc16, (bit<32>)0, {hdr.ipv4.srcAddr}, (bit<32>)4096);
+         hash(addr2, HashAlgorithm.crc32, (bit<32>)0, {hdr.ipv4.srcAddr}, (bit<32>)4096);
+         if(is_attack == 0) {
+              white_list_1.write(addr1, turn);
+              white_list_1.write(addr2, turn);
+         }
+         else {
+             bit<8> allow_1;
+             bit<8> allow_2;
+             white_list_1.read(allow_1, addr1);
+             white_list_1.read(allow_2, addr2);
+             if(allow_1 != turn || allow_2 != turn) {
+                drop();
+             }
          }
 
     }
