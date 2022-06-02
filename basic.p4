@@ -2,6 +2,8 @@
 #include <core.p4>
 #include <v1model.p4>
 
+#define LIST_SIZE 9162
+
 const bit<16> TYPE_IPV4 = 0x800;
 const bit<8> PROTOCOL_TCP = 0x06;
 const bit<8> PROTOCOL_UDP = 0x11;
@@ -130,8 +132,8 @@ control MyIngress(inout headers hdr,
     register<bit<32>>(1) reg_udp_count;
     register<bit<32>>(1) reg_syn_count;
 
-    register<bit<8>>(4096) white_list_1;
-    register<bit<8>>(4096) white_list_2;
+    register<bit<8>>(LIST_SIZE) white_list_1;
+    register<bit<8>>(LIST_SIZE) white_list_2;
     register<bit<8>>(1) reg_is_attack;
     register<bit<8>>(1) reg_turn;
     bit<8> turn;
@@ -239,12 +241,14 @@ control MyIngress(inout headers hdr,
          bit<8> old_is_attack;
          reg_is_attack.read(old_is_attack,0);
          update_is_attack_table.apply();
+         if(turn == 0)
+            turn = 1;
          if(is_attack == 0 && old_is_attack == 1)
             turn = turn + 1;
          reg_is_attack.write(0, is_attack);
          reg_turn.write(0, turn);
-         hash(addr1, HashAlgorithm.crc16, (bit<32>)0, {hdr.ipv4.srcAddr}, (bit<32>)4096);
-         hash(addr2, HashAlgorithm.crc32, (bit<32>)0, {hdr.ipv4.srcAddr}, (bit<32>)4096);
+         hash(addr1, HashAlgorithm.crc16, (bit<32>)0, {hdr.ipv4.srcAddr}, (bit<32>)LIST_SIZE);
+         hash(addr2, HashAlgorithm.crc32, (bit<32>)0, {hdr.ipv4.srcAddr}, (bit<32>)LIST_SIZE);
          if(is_attack == 0) {
               white_list_1.write(addr1, turn);
               white_list_1.write(addr2, turn);

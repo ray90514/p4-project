@@ -140,6 +140,7 @@ def readDigest(p4info_helper, sw):
     sw.WriteTableEntry(table_entry)
     list_id = None
     no_attack_count = 0
+    is_attack = False
     while True:
         print('\n----- Reading digest(%d) for %s -----'%(digest_id, sw.name))
         for digest in sw.ReadDigest(digest_id, list_id):
@@ -176,17 +177,19 @@ def readDigest(p4info_helper, sw):
                     print("\033[91m%s\033[0m"%"Under attacking!!!")
                     no_attack_count = 0
                     if not is_attack:
-                        table_entry.action.action.params[0].value = bytes(1)
+                        table_entry.action.action.params[0].value = bytes([1]);
                         sw.WriteTableEntry(table_entry)
                     is_attack = True
                 else:
                     print("\033[93m%s\033[0m"%'BENGIN')
-                    no_attack_count += 1
+                    if is_attack:
+                        no_attack_count += 1
                     if is_attack and no_attack_count == 10:
-                        table_entry.action.action.params[0].value = bytes(0)
+                        table_entry.action.action.params[0].value = bytes([0]);
                         sw.WriteTableEntry(table_entry)
                         no_attack_count = 0
-                    is_attack = False
+                        is_attack = False
+
 
 
 def printCounter(p4info_helper, sw, counter_name, index):
