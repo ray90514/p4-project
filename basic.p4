@@ -2,7 +2,7 @@
 #include <core.p4>
 #include <v1model.p4>
 
-#define LIST_SIZE 9162
+#define LIST_SIZE 4096
 
 const bit<16> TYPE_IPV4 = 0x800;
 const bit<8> PROTOCOL_TCP = 0x06;
@@ -134,6 +134,8 @@ control MyIngress(inout headers hdr,
 
     register<bit<8>>(LIST_SIZE) white_list_1;
     register<bit<8>>(LIST_SIZE) white_list_2;
+    register<bit<8>>(LIST_SIZE) white_list_3;
+    //register<bit<8>>(LIST_SIZE) white_list_4;
     register<bit<8>>(1) reg_is_attack;
     register<bit<8>>(1) reg_turn;
     bit<8> turn;
@@ -238,27 +240,40 @@ control MyIngress(inout headers hdr,
 
          bit<32> addr1;
          bit<32> addr2;
+         bit<32> addr3;
+         //bit<32> addr4;
          bit<8> old_is_attack;
          reg_is_attack.read(old_is_attack,0);
+         reg_turn.read(turn, 0);
          update_is_attack_table.apply();
          if(turn == 0)
             turn = 1;
-         if(is_attack == 0 && old_is_attack == 1)
-            turn = turn + 1;
+         if(is_attack == 0 && old_is_attack == 1) {
+             turn = turn + 1;
+             reg_turn.write(0, turn);
+         }
+
          reg_is_attack.write(0, is_attack);
-         reg_turn.write(0, turn);
          hash(addr1, HashAlgorithm.crc16, (bit<32>)0, {hdr.ipv4.srcAddr}, (bit<32>)LIST_SIZE);
          hash(addr2, HashAlgorithm.crc32, (bit<32>)0, {hdr.ipv4.srcAddr}, (bit<32>)LIST_SIZE);
+         hash(addr3, HashAlgorithm.csum16, (bit<32>)0, {hdr.ipv4.srcAddr}, (bit<32>)LIST_SIZE);
+         //hash(addr4, HashAlgorithm.xor16, (bit<32>)0, {hdr.ipv4.srcAddr}, (bit<32>)LIST_SIZE);
          if(is_attack == 0) {
               white_list_1.write(addr1, turn);
-              white_list_1.write(addr2, turn);
+              white_list_2.write(addr2, turn);
+              white_list_3.write(addr3, turn);
+              //white_list_4.write(addr4, turn);
          }
          else {
              bit<8> allow_1;
              bit<8> allow_2;
+             bit<8> allow_3;
+             //bit<8> allow_4;
              white_list_1.read(allow_1, addr1);
-             white_list_1.read(allow_2, addr2);
-             if(allow_1 != turn || allow_2 != turn) {
+             white_list_2.read(allow_2, addr2);
+             white_list_3.read(allow_3, addr3);
+             //white_list_4.read(allow_4, addr4);
+             if(allow_1 != turn || allow_2 != turn || allow_3 != turn) {
                 drop();
              }
          }
