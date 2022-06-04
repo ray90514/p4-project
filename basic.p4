@@ -226,7 +226,7 @@ control MyIngress(inout headers hdr,
                  is_syn = 1;
                  syn_count = syn_count + 1;
              }
-             if(hdr.tcp.ctrl == 63 || hdr.tcp.ctrl == 1 || hdr.tcp.ctrl == 8 || hdr.tcp.ctrl == 32 || hdr.tcp.ctrl & 3 != 0 || hdr.tcp.ctrl & 6 != 0 || hdr.tcp.ctrl & 5 != 0) {
+             if(hdr.tcp.ctrl == 63 || hdr.tcp.ctrl == 1 || hdr.tcp.ctrl == 8 || hdr.tcp.ctrl == 32 || (hdr.tcp.ctrl & 3 == 3) || (hdr.tcp.ctrl & 6 == 6) || (hdr.tcp.ctrl & 5 == 5)) {
                  is_flags = 1;
                  flags_count = flags_count + 1;
              }

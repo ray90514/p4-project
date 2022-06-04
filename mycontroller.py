@@ -185,11 +185,17 @@ def readDigest(p4info_helper, sw):
                 target = RF.predict(np.array([[a,b,c,d,e,f,g,h]]))
                 if target != 0:
                     #print("\033[91m%s\033[0m"%"Under attacking!!!")
-                    print("\033[91m%s\033[0m"%"Under attacking!!!")
-                    print(target)
+                    if target[0] == 1:
+                        print("\033[91m%s\033[0m"%"Under SYN flood attacking!!!")
+                    elif target[0] == 2:
+                        print("\033[91m%s\033[0m"%"Under UDP flood attacking!!!")
+                    elif target[0] == 3:
+                        print("\033[91m%s\033[0m"%"Under ICMP flood attacking!!!")
+                    elif target[0] == 4:
+                        print("\033[91m%s\033[0m"%"Under TCP flags attacking!!!")
                     no_attack_count = 0
                     if not is_attack:
-                        table_entry.action.action.params[0].value = bytes([1]);
+                        table_entry.action.action.params[0].value = bytes([target[0]])
                         sw.WriteTableEntry(table_entry)
                     is_attack = True
                 else:
@@ -197,7 +203,7 @@ def readDigest(p4info_helper, sw):
                     if is_attack:
                         no_attack_count += 1
                     if is_attack and no_attack_count == 10:
-                        table_entry.action.action.params[0].value = bytes([0]);
+                        table_entry.action.action.params[0].value = bytes([target[0]])
                         sw.WriteTableEntry(table_entry)
                         no_attack_count = 0
                         is_attack = False
