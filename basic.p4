@@ -5,6 +5,7 @@
 #define LIST_SIZE 4096
 
 const bit<16> TYPE_IPV4 = 0x800;
+const bit<8> PROTOCOL_ICMP = 0x01;
 const bit<8> PROTOCOL_TCP = 0x06;
 const bit<8> PROTOCOL_UDP = 0x11;
 /*************************************************************************
@@ -64,9 +65,12 @@ struct headers {
 struct digest_t {
     bit<32> packet_count;
     bit<32> packet_size;
+    bit<32> icmp_count;
     bit<32> tcp_count;
     bit<32> udp_count;
+    bit<32> other_count;
     bit<32> syn_count;
+    bit<32> flags_count;
     time_t interval;
 }
 
@@ -128,9 +132,12 @@ control MyIngress(inout headers hdr,
     register<time_t>(1) reg_prev_time;
     register<bit<32>>(1) reg_packet_count;
     register<bit<32>>(1) reg_packet_size;
+    register<bit<32>>(1) reg_icmp_count;
     register<bit<32>>(1) reg_tcp_count;
     register<bit<32>>(1) reg_udp_count;
+    register<bit<32>>(1) reg_other_count;
     register<bit<32>>(1) reg_syn_count;
+    register<bit<32>>(1) reg_flags_count;
 
     register<bit<8>>(LIST_SIZE) white_list_1;
     register<bit<8>>(LIST_SIZE) white_list_2;
@@ -157,9 +164,6 @@ control MyIngress(inout headers hdr,
     }
 
     table update_is_attack_table {
-        key = {
-            is_attack : range;
-        }
         actions = {
             update_is_attack;
             NoAction;
@@ -189,16 +193,21 @@ control MyIngress(inout headers hdr,
          time_t prev_time;
          bit<32> packet_count;
          bit<32> packet_size;
+         bit<32> icmp_count;
          bit<32> udp_count;
          bit<32> tcp_count;
+         bit<32> other_count;
          bit<32> syn_count;
+         bit<32> flags_count;
 
          reg_prev_time.read(prev_time, 0);
          reg_packet_size.read(packet_size, 0);
          reg_packet_count.read(packet_count,0);
+         reg_icmp_count.read(icmp_count,0);
          reg_tcp_count.read(tcp_count,0);
          reg_udp_count.read(udp_count,0);
          reg_syn_count.read(syn_count,0);
+         reg_flags_count.read(flags_count,0);
 
          packet_count = packet_count + 1;
          packet_size = standard_metadata.packet_length + packet_size;
@@ -208,31 +217,49 @@ control MyIngress(inout headers hdr,
          else if(hdr.ipv4.protocol == PROTOCOL_UDP) {
              udp_count = udp_count + 1;
          }
+         else if(hdr.ipv4.protocol == PROTOCOL_ICMP) {
+             icmp_count = icmp_count + 1;
+         }
+         else {
+             other_count = other_count + 1;
+         }
          if(hdr.tcp.ctrl & 0x2 != 0) {
              syn_count = syn_count + 1;
+         }
+         if(hdr.tcp.ctrl == 63 || hdr.tcp.ctrl == 1 || hdr.tcp.ctrl == 8 || hdr.tcp.ctrl == 32 || hdr.tcp.ctrl & 3 != 0 || hdr.tcp.ctrl & 6 != 0 || hdr.tcp.ctrl & 5 != 0) {
+             flags_count = flags_count + 1;
          }
 
          if(standard_metadata.ingress_global_timestamp - prev_time > 1000000) {
              digest_t info;
              info.packet_size = packet_size;
              info.packet_count = packet_count;
+             info.icmp_count = icmp_count;
              info.tcp_count = tcp_count;
              info.udp_count = udp_count;
+             info.other_count = other_count;
              info.syn_count = syn_count;
+             info.flags_count = flags_count;
              info.interval = standard_metadata.ingress_global_timestamp - prev_time;
              digest<digest_t>(0, info);
              packet_size = 0;
              packet_count = 0;
+             icmp_count = 0;
              tcp_count = 0;
              udp_count = 0;
+             other_count = 0;
              syn_count = 0;
+             flags_count = 0;
              reg_prev_time.write(0, standard_metadata.ingress_global_timestamp);
          }
          reg_packet_count.write(0, packet_count);
          reg_packet_size.write(0, packet_size);
+         reg_icmp_count.write(0, icmp_count);
          reg_tcp_count.write(0, tcp_count);
          reg_udp_count.write(0, udp_count);
+         reg_other_count.write(0, other_count);
          reg_syn_count.write(0, syn_count);
+         reg_flags_count.write(0, flags_count);
 
          if(hdr.ipv4.isValid()) {
              ipv4_lpm.apply();
