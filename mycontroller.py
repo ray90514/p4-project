@@ -172,7 +172,7 @@ def readDigest(p4info_helper, sw):
                     g = 0.0
                     h = 0.0
                 else :
-                    e = syn_count/tcp_count
+                    g = syn_count/tcp_count
                     h = faultflags_count/tcp_count
                 print(f'packet size: {a}')
                 print(f'interval: {b}')
@@ -183,8 +183,10 @@ def readDigest(p4info_helper, sw):
                 print(f'syn/tcp: {g}')
                 print(f'faultflags/tcp: {h}')
                 target = RF.predict(np.array([[a,b,c,d,e,f,g,h]]))
-                if target == 1:
+                if target != 0:
+                    #print("\033[91m%s\033[0m"%"Under attacking!!!")
                     print("\033[91m%s\033[0m"%"Under attacking!!!")
+                    print(target)
                     no_attack_count = 0
                     if not is_attack:
                         table_entry.action.action.params[0].value = bytes([1]);
