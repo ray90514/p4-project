@@ -222,7 +222,7 @@ control MyIngress(inout headers hdr,
          if(hdr.ipv4.protocol == PROTOCOL_TCP) {
              is_tcp = 1;
              tcp_count = tcp_count + 1;
-             if(hdr.tcp.ctrl & 0x2 != 0) {
+             if(hdr.tcp.ctrl == 0x2) {
                  is_syn = 1;
                  syn_count = syn_count + 1;
              }
@@ -317,20 +317,20 @@ control MyIngress(inout headers hdr,
              if(allow_1 != turn || allow_2 != turn || allow_3 != turn) {
                  if(is_attack == 1 && is_syn == 1) {
                      // syn flood
+                     drop();
                  }
                  else if (is_attack == 2 && is_udp == 1) {
                      // udp attack
+                     drop();
                  }
                  else if (is_attack == 3 && is_icmp == 1) {
                      // icmp attack
+                     drop();
                  }
-                 else if (is_attack == 4 && is_other == 1) {
-                     // other attack
-                 }
-                 else if (is_attack == 5 && is_flags == 1) {
+                 else if (is_attack == 4 && is_flags == 1) {
                      // flags abnormal
+                     drop();
                  }
-                drop();
              }
          }
 
