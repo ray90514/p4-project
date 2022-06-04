@@ -200,34 +200,48 @@ control MyIngress(inout headers hdr,
          bit<32> syn_count;
          bit<32> flags_count;
 
+         bit<8> is_icmp = 0;
+         bit<8> is_tcp = 0;
+         bit<8> is_udp = 0;
+         bit<8> is_other = 0;
+         bit<8> is_syn = 0;
+         bit<8> is_flags = 0;
+
          reg_prev_time.read(prev_time, 0);
          reg_packet_size.read(packet_size, 0);
          reg_packet_count.read(packet_count,0);
          reg_icmp_count.read(icmp_count,0);
          reg_tcp_count.read(tcp_count,0);
          reg_udp_count.read(udp_count,0);
+         reg_other_count.read(other_count,0);
          reg_syn_count.read(syn_count,0);
          reg_flags_count.read(flags_count,0);
 
          packet_count = packet_count + 1;
          packet_size = standard_metadata.packet_length + packet_size;
          if(hdr.ipv4.protocol == PROTOCOL_TCP) {
+             is_tcp = 1;
              tcp_count = tcp_count + 1;
+             if(hdr.tcp.ctrl & 0x2 != 0) {
+                 is_syn = 1;
+                 syn_count = syn_count + 1;
+             }
+             if(hdr.tcp.ctrl == 63 || hdr.tcp.ctrl == 1 || hdr.tcp.ctrl == 8 || hdr.tcp.ctrl == 32 || hdr.tcp.ctrl & 3 != 0 || hdr.tcp.ctrl & 6 != 0 || hdr.tcp.ctrl & 5 != 0) {
+                 is_flags = 1;
+                 flags_count = flags_count + 1;
+             }
          }
          else if(hdr.ipv4.protocol == PROTOCOL_UDP) {
+             is_udp = 1;
              udp_count = udp_count + 1;
          }
          else if(hdr.ipv4.protocol == PROTOCOL_ICMP) {
+             is_icmp = 1;
              icmp_count = icmp_count + 1;
          }
          else {
+             is_other = 1;
              other_count = other_count + 1;
-         }
-         if(hdr.tcp.ctrl & 0x2 != 0) {
-             syn_count = syn_count + 1;
-         }
-         if(hdr.tcp.ctrl == 63 || hdr.tcp.ctrl == 1 || hdr.tcp.ctrl == 8 || hdr.tcp.ctrl == 32 || hdr.tcp.ctrl & 3 != 0 || hdr.tcp.ctrl & 6 != 0 || hdr.tcp.ctrl & 5 != 0) {
-             flags_count = flags_count + 1;
          }
 
          if(standard_metadata.ingress_global_timestamp - prev_time > 1000000) {
@@ -275,7 +289,7 @@ control MyIngress(inout headers hdr,
          update_is_attack_table.apply();
          if(turn == 0)
             turn = 1;
-         if(is_attack == 0 && old_is_attack == 1) {
+         if(is_attack == 0 && old_is_attack != 0) {
              turn = turn + 1;
              reg_turn.write(0, turn);
          }
@@ -301,6 +315,21 @@ control MyIngress(inout headers hdr,
              white_list_3.read(allow_3, addr3);
              //white_list_4.read(allow_4, addr4);
              if(allow_1 != turn || allow_2 != turn || allow_3 != turn) {
+                 if(is_attack == 1 && is_syn == 1) {
+                     // syn flood
+                 }
+                 else if (is_attack == 2 && is_udp == 1) {
+                     // udp attack
+                 }
+                 else if (is_attack == 3 && is_icmp == 1) {
+                     // icmp attack
+                 }
+                 else if (is_attack == 4 && is_other == 1) {
+                     // other attack
+                 }
+                 else if (is_attack == 5 && is_flags == 1) {
+                     // flags abnormal
+                 }
                 drop();
              }
          }
