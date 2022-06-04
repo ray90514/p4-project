@@ -148,10 +148,13 @@ def readDigest(p4info_helper, sw):
             for data in digest.data:
                 packet_count = int.from_bytes(data.struct.members[0].bitstring, 'big')
                 packet_size = int.from_bytes(data.struct.members[1].bitstring, 'big')
-                tcp_count = int.from_bytes(data.struct.members[2].bitstring, 'big')
-                udp_count = int.from_bytes(data.struct.members[3].bitstring, 'big')
-                syn_count = int.from_bytes(data.struct.members[4].bitstring, 'big')
-                interval = int.from_bytes(data.struct.members[5].bitstring, 'big')
+                icmp_count = int.from_bytes(data.struct.members[2].bitstring, 'big')
+                tcp_count = int.from_bytes(data.struct.members[3].bitstring, 'big')
+                udp_count = int.from_bytes(data.struct.members[4].bitstring, 'big')
+                other_count = int.from_bytes(data.struct.members[5].bitstring, 'big')
+                syn_count = int.from_bytes(data.struct.members[6].bitstring, 'big')
+                faultflags_count = int.from_bytes(data.struct.members[7].bitstring, 'big')
+                interval = int.from_bytes(data.struct.members[8].bitstring, 'big')
                 print('---------------------------')
                 #print(f'packet_count: {packet_count}')
                 #print(f'packet_length: {packet_size}')
@@ -163,16 +166,23 @@ def readDigest(p4info_helper, sw):
                 b = interval/(1000000000*packet_count)
                 c = tcp_count/packet_count
                 d = udp_count/packet_count
+                e = icmp_count/packet_count
+                f = other_count/packet_count
                 if tcp_count == 0 :
-                    e = 0.0
+                    g = 0.0
+                    h = 0.0
                 else :
                     e = syn_count/tcp_count
+                    h = faultflags_count/tcp_count
                 print(f'packet size: {a}')
                 print(f'interval: {b}')
                 print(f'tcp ratio: {c}')
                 print(f'udp ratio: {d}')
-                print(f'syn/tcp: {e}')
-                target = RF.predict(np.array([[a,b,c,d,e]]))
+                print(f'icmp ratio: {e}')
+                print(f'other ratio: {f}')
+                print(f'syn/tcp: {g}')
+                print(f'faultflags/tcp: {h}')
+                target = RF.predict(np.array([[a,b,c,d,e,f,g,h]]))
                 if target == 1:
                     print("\033[91m%s\033[0m"%"Under attacking!!!")
                     no_attack_count = 0
@@ -284,6 +294,6 @@ if __name__ == '__main__':
         parser.print_help()
         print("\nBMv2 JSON file not found: %s\nHave you run 'make'?" % args.bmv2_json)
         parser.exit(1)
-    RF = joblib.load('RF')
+    RF = joblib.load('RF2')
     warnings.filterwarnings("ignore")
     main(args.p4info, args.bmv2_json)
