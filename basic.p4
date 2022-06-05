@@ -145,6 +145,7 @@ control MyIngress(inout headers hdr,
     //register<bit<8>>(LIST_SIZE) white_list_4;
     register<bit<8>>(1) reg_is_attack;
     register<bit<8>>(1) reg_turn;
+    register<bit<8>>(1) reg_rand;
     bit<8> turn;
     bit<8> is_attack;
 
@@ -226,7 +227,7 @@ control MyIngress(inout headers hdr,
                  is_syn = 1;
                  syn_count = syn_count + 1;
              }
-             if(hdr.tcp.ctrl == 63 || hdr.tcp.ctrl == 1 || hdr.tcp.ctrl == 8 || hdr.tcp.ctrl == 32 || (hdr.tcp.ctrl & 3 == 3) || (hdr.tcp.ctrl & 6 == 6) || (hdr.tcp.ctrl & 5 == 5)) {
+             if(hdr.tcp.ctrl == 63 || hdr.tcp.ctrl == 1 || hdr.tcp.ctrl == 8 || hdr.tcp.ctrl == 32 || hdr.tcp.ctrl & 3 == 3 || hdr.tcp.ctrl & 6 == 6 || hdr.tcp.ctrl & 5 == 5) {
                  is_flags = 1;
                  flags_count = flags_count + 1;
              }
@@ -286,6 +287,7 @@ control MyIngress(inout headers hdr,
          bit<8> old_is_attack;
          reg_is_attack.read(old_is_attack,0);
          reg_turn.read(turn, 0);
+         is_attack = 0;
          update_is_attack_table.apply();
          if(turn == 0)
             turn = 1;
@@ -315,22 +317,28 @@ control MyIngress(inout headers hdr,
              white_list_3.read(allow_3, addr3);
              //white_list_4.read(allow_4, addr4);
              if(allow_1 != turn || allow_2 != turn || allow_3 != turn) {
-                 if(is_attack == 1 && is_syn == 1) {
-                     // syn flood
-                     drop();
+                 bit<8> rand;
+                 reg_rand.read(rand, 0);
+                 if(rand & 3 != 0) {
+                      if(is_attack == 1 && is_syn == 1) {
+                          // syn flood
+                          drop();
+                      }
+                      else if (is_attack == 2 && is_udp == 1) {
+                          // udp attack
+                          drop();
+                      }
+                      else if (is_attack == 3 && is_icmp == 1) {
+                          // icmp attack
+                          drop();
+                      }
+                      else if (is_attack == 4 && is_flags == 1) {
+                          // flags abnormal
+                          drop();
+                      }
                  }
-                 else if (is_attack == 2 && is_udp == 1) {
-                     // udp attack
-                     drop();
-                 }
-                 else if (is_attack == 3 && is_icmp == 1) {
-                     // icmp attack
-                     drop();
-                 }
-                 else if (is_attack == 4 && is_flags == 1) {
-                     // flags abnormal
-                     drop();
-                 }
+                 rand = rand + 1;
+                 reg_rand.write(0, rand);
              }
          }
 
