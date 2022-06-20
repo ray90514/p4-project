@@ -305,41 +305,32 @@ control MyIngress(inout headers hdr,
               white_list_1.write(addr1, turn);
               white_list_2.write(addr2, turn);
               white_list_3.write(addr3, turn);
-              //white_list_4.write(addr4, turn);
          }
          else {
              bit<8> allow_1;
              bit<8> allow_2;
              bit<8> allow_3;
-             //bit<8> allow_4;
              white_list_1.read(allow_1, addr1);
              white_list_2.read(allow_2, addr2);
              white_list_3.read(allow_3, addr3);
-             //white_list_4.read(allow_4, addr4);
              if(allow_1 != turn || allow_2 != turn || allow_3 != turn) {
-                 bit<8> rand;
-                 reg_rand.read(rand, 0);
-                 if(true) {
-                      if(is_attack == 1 && is_syn == 1) {
-                          // syn flood
-                          drop();
-                      }
-                      else if (is_attack == 2 && is_udp == 1) {
-                          // udp attack
-                          drop();
-                      }
-                      else if (is_attack == 3 && is_icmp == 1) {
-                          // icmp attack
-                          drop();
-                      }
-                      else if (is_attack == 4 && is_flags == 1) {
-                          // flags abnormal
-                          drop();
-                      }
+                 if(is_attack == 1 && is_syn == 1) {
+                    // syn flood
+                    drop();
                  }
-                 rand = rand + 1;
-                 reg_rand.write(0, rand);
-             }
+                 else if (is_attack == 2 && is_udp == 1) {
+                     // udp attack
+                     drop();
+                 }
+                 else if (is_attack == 3 && is_icmp == 1) {
+                     // icmp attack
+                     drop();
+                }
+                else if (is_attack == 4 && is_flags == 1) {
+                    // flags abnormal
+                    drop();
+                }
+            }
          }
 
     }
