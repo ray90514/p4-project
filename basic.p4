@@ -223,7 +223,7 @@ control MyIngress(inout headers hdr,
          if(hdr.ipv4.protocol == PROTOCOL_TCP) {
              is_tcp = 1;
              tcp_count = tcp_count + 1;
-             if(hdr.tcp.ctrl == 0x2) {
+             if(hdr.tcp.ctrl & 0x2 == 0x2) {
                  is_syn = 1;
                  syn_count = syn_count + 1;
              }
@@ -319,7 +319,7 @@ control MyIngress(inout headers hdr,
              if(allow_1 != turn || allow_2 != turn || allow_3 != turn) {
                  bit<8> rand;
                  reg_rand.read(rand, 0);
-                 if(rand & 3 != 0) {
+                 if(true) {
                       if(is_attack == 1 && is_syn == 1) {
                           // syn flood
                           drop();
